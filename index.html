@@ -4,9 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat with xAI</title>
+    <!-- Add EB Garamond from Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'EB Garamond', serif;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -20,6 +22,8 @@
             margin: 20px 0;
             font-size: 1.5em;
             color: #333;
+            font-family: 'EB Garamond', serif;
+            font-weight: bold;
         }
 
         .chat-container {
@@ -51,9 +55,14 @@
             margin-left: auto;
             background-color: #007bff;
             color: #fff;
-            text-align: right; /* Align text to the right */
+            text-align: left;
             width: fit-content;
-            white-space: pre-wrap; /* Preserve newlines */
+            max-width: 75%;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-family: 'EB Garamond', serif;
         }
 
         .chatbox .message.bot {
@@ -62,6 +71,7 @@
             color: #333;
             text-align: left;
             width: fit-content;
+            font-family: 'EB Garamond', serif;
         }
 
         .input-container {
@@ -77,6 +87,7 @@
             border-radius: 4px;
             outline: none;
             font-size: 1.2em;
+            font-family: 'EB Garamond', serif;
         }
 
         #sendButton {
@@ -88,6 +99,7 @@
             color: #fff;
             cursor: pointer;
             font-size: 1em;
+            font-family: 'EB Garamond', serif;
         }
 
         #sendButton:hover {
@@ -163,3 +175,4 @@
     </script>
 </body>
 </html>
+
