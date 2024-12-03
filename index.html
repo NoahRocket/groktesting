@@ -21,7 +21,8 @@
             background: #fff;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
+            display: flex;
+            flex-direction: column;
         }
 
         .chatbox {
@@ -33,87 +34,109 @@
 
         .chatbox .message {
             margin-bottom: 15px;
+            padding: 10px 15px;
+            border-radius: 8px;
+            max-width: 75%;
         }
 
         .chatbox .message.user {
+            margin-left: auto;
+            background-color: #007bff;
+            color: #fff;
             text-align: right;
         }
 
         .chatbox .message.bot {
+            margin-right: auto;
+            background-color: #f1f0f0;
+            color: #333;
             text-align: left;
         }
 
+        .input-container {
+            display: flex;
+            padding: 10px;
+            border-top: 1px solid #ddd;
+        }
+
         #userInput {
-            width: calc(100% - 80px);
+            flex: 1;
             padding: 15px;
-            border: none;
+            border: 1px solid #ddd;
+            border-radius: 4px;
             outline: none;
         }
 
         #sendButton {
-            width: 80px;
-            padding: 15px;
+            margin-left: 10px;
+            padding: 15px 20px;
             border: none;
-            background: #007bff;
+            border-radius: 4px;
+            background-color: #007bff;
             color: #fff;
             cursor: pointer;
         }
 
         #sendButton:hover {
-            background: #0056b3;
+            background-color: #0056b3;
         }
     </style>
 </head>
 <body>
     <div class="chat-container">
         <div id="chatbox" class="chatbox"></div>
-        <input type="text" id="userInput" placeholder="Type your message here...">
-        <button id="sendButton">Send</button>
+        <div class="input-container">
+            <input type="text" id="userInput" placeholder="Type your message here...">
+            <button id="sendButton">Send</button>
+        </div>
     </div>
 
     <script>
         // Function to handle user input and API calls
-        document.getElementById('sendButton').addEventListener('click', async () => {
-            const userInput = document.getElementById('userInput').value;
+        const chatbox = document.getElementById('chatbox');
+        const userInputField = document.getElementById('userInput');
+        const sendButton = document.getElementById('sendButton');
+
+        function addMessage(content, isUser = false) {
+            const message = document.createElement('div');
+            message.className = `message ${isUser ? 'user' : 'bot'}`;
+            message.textContent = content;
+            chatbox.appendChild(message);
+            chatbox.scrollTop = chatbox.scrollHeight; // Scroll to the bottom
+        }
+
+        async function sendMessage() {
+            const userInput = userInputField.value.trim();
             if (!userInput) return;
 
             // Display the user's message
-            const chatbox = document.getElementById('chatbox');
-            const userMessage = document.createElement('div');
-            userMessage.className = 'message user';
-            userMessage.textContent = userInput;
-            chatbox.appendChild(userMessage);
+            addMessage(userInput, true);
 
             // Clear input field
-            document.getElementById('userInput').value = '';
+            userInputField.value = '';
 
             // Call the Netlify Function
             try {
                 const response = await fetch('/.netlify/functions/xaiProxy', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ userInput })
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userInput }),
                 });
 
                 const data = await response.json();
 
                 // Display the bot's response
-                const botMessage = document.createElement('div');
-                botMessage.className = 'message bot';
-                botMessage.textContent = data.choices[0].message.content;
-                chatbox.appendChild(botMessage);
-
-                // Scroll to the bottom
-                chatbox.scrollTop = chatbox.scrollHeight;
+                addMessage(data.choices[0].message.content, false);
             } catch (error) {
                 console.error('Error:', error);
-                const errorMessage = document.createElement('div');
-                errorMessage.className = 'message bot';
-                errorMessage.textContent = 'Error: Unable to fetch response.';
-                chatbox.appendChild(errorMessage);
+                addMessage('Error: Unable to fetch response.', false);
             }
+        }
+
+        // Add event listeners
+        sendButton.addEventListener('click', sendMessage);
+        userInputField.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
         });
     </script>
 </body>
