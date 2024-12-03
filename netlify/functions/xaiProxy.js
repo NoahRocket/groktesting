@@ -11,7 +11,7 @@ exports.handler = async (event) => {
             },
             body: JSON.stringify({
                 messages: [{ role: 'user', content: userInput }],
-                model: 'grok-beta',
+                model: 'grok-2',
                 stream: false,
                 temperature: 0
             })
