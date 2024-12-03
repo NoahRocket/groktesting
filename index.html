@@ -4,10 +4,24 @@
     <meta charset="UTF-8">
     <title>Grok API Chat Interface</title>
     <style>
-        body { font-family: Arial, sans-serif; max-width: 600px; margin: 20px auto; }
-        textarea { width: 100%; height: 100px; }
-        button { margin-top: 10px; padding: 10px; }
-        .response { margin-top: 20px; padding: 10px; background: #f0f0f0; }
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 20px auto;
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+        }
+        button {
+            margin-top: 10px;
+            padding: 10px;
+        }
+        .response {
+            margin-top: 20px;
+            padding: 10px;
+            background: #f0f0f0;
+        }
     </style>
 </head>
 <body>
@@ -16,6 +30,30 @@
     <button id="sendButton">Send</button>
     <div id="responseBox" class="response"></div>
 
-    <script src="script.js"></script>
+    <script>
+        document.getElementById('sendButton').addEventListener('click', async () => {
+            const userInput = document.getElementById('userInput').value;
+            const responseBox = document.getElementById('responseBox');
+
+            responseBox.textContent = 'Loading...';
+
+            try {
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: userInput })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    responseBox.textContent = data.reply;
+                } else {
+                    responseBox.textContent = 'Error: Unable to get a response.';
+                }
+            } catch (error) {
+                responseBox.textContent = 'Error: ' + error.message;
+            }
+        });
+    </script>
 </body>
 </html>
