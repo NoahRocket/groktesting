@@ -21,7 +21,7 @@
             display: none;
         }
 
-        h1 {
+        h1, h3 {
             color: #333;
         }
 
@@ -47,7 +47,7 @@
         }
 
         .chatbox {
-            height: 300px;
+            height: 60vh;
             width: 90%;
             max-width: 600px;
             background: white;
@@ -77,11 +77,6 @@
             background-color: #f1f0f0;
             color: #333;
             margin-right: auto;
-        }
-
-        .message span {
-            color: red;
-            cursor: help;
         }
 
         .input-container {
@@ -118,6 +113,32 @@
             margin-top: 10px;
             font-size: 1rem;
         }
+
+        #correctionsContainer {
+            width: 90%;
+            max-width: 600px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            margin-top: 10px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #correctionsList {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        #correctionsList li {
+            margin-bottom: 5px;
+            padding: 5px 10px;
+            border-radius: 5px;
+            background: #fff;
+            box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
+        }
     </style>
 </head>
 <body>
@@ -153,6 +174,10 @@
             <button id="sendButton">Send</button>
         </div>
         <p id="sessionLimit">Messages left: 10</p>
+        <div id="correctionsContainer" class="hidden">
+            <h3>Corrections</h3>
+            <ul id="correctionsList"></ul>
+        </div>
     </div>
 
     <script>
@@ -170,22 +195,18 @@
         let selectedProficiency = '';
         let selectedTopic = '';
 
-        // Show settings page
         startButton.addEventListener('click', () => {
             landingPage.classList.add('hidden');
             settingsPage.classList.remove('hidden');
         });
 
-        // Show chat page
         startChatButton.addEventListener('click', () => {
             selectedProficiency = document.getElementById('proficiency').value;
             selectedTopic = document.getElementById('topics').value;
-
             settingsPage.classList.add('hidden');
             chatContainer.classList.remove('hidden');
         });
 
-        // Decrement session limit
         function decrementSessionLimit() {
             messageLimit--;
             sessionLimitText.innerText = `Messages left: ${messageLimit}`;
@@ -194,37 +215,33 @@
             }
         }
 
-        // Add a message to the chatbox
-        function addMessage(content, isUser = false, corrections = null) {
+        function addMessage(content, isUser = false) {
             const message = document.createElement('div');
             message.className = `message ${isUser ? 'user' : 'bot'}`;
             message.innerHTML = content;
-
-            // Highlight corrections
-            if (corrections && !isUser) {
-                corrections.forEach((error) => {
-                    const regex = new RegExp(`\\b${error.word}\\b`, 'gi');
-                    message.innerHTML = message.innerHTML.replace(
-                        regex,
-                        `<span title="Correction: ${error.suggestion}">${error.word}</span>`
-                    );
-                });
-            }
-
             chatbox.appendChild(message);
             chatbox.scrollTop = chatbox.scrollHeight;
         }
 
-        // Send user input to the bot
+        function displayCorrections(corrections) {
+            const correctionsContainer = document.getElementById('correctionsContainer');
+            const correctionsList = document.getElementById('correctionsList');
+            correctionsContainer.classList.remove('hidden');
+            correctionsList.innerHTML = '';
+            corrections.forEach((correction) => {
+                const listItem = document.createElement('li');
+                listItem.textContent = `Word: ${correction.word}, Suggestion: ${correction.suggestion}`;
+                correctionsList.appendChild(listItem);
+            });
+        }
+
         async function sendMessage() {
             const userInput = userInputField.value.trim();
             if (!userInput || messageLimit <= 0) return;
+            addMessage(userInput, true);
+            userInputField.value = '';
+            decrementSessionLimit();
 
-            addMessage(userInput, true); // Display user message
-            userInputField.value = ''; // Clear input field
-            decrementSessionLimit(); // Update session limit
-
-            // Typing indicator
             const typingIndicator = document.createElement('div');
             typingIndicator.className = 'message bot';
             typingIndicator.innerText = 'Typing...';
@@ -242,11 +259,9 @@
                 });
 
                 const data = await response.json();
-                typingIndicator.remove(); // Remove typing indicator
-
-                const botMessage = data.choices[0]?.message.content || 'No response';
-                const corrections = data.corrections || [];
-                addMessage(botMessage, false, corrections);
+                typingIndicator.remove();
+                addMessage(data.choices[0]?.message.content || 'No response', false);
+                displayCorrections(data.corrections || []);
             } catch (error) {
                 console.error('Error:', error);
                 typingIndicator.remove();
@@ -254,7 +269,6 @@
             }
         }
 
-        // Event listeners
         sendButton.addEventListener('click', sendMessage);
         userInputField.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') sendMessage();
