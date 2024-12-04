@@ -95,16 +95,29 @@ exports.handler = async (event) => {
  * Function to detect spelling errors and suggest corrections.
  */
 async function getCorrections(input) {
-    const words = input.split(/\s+/);
+    const words = input.split(/\s+/); // Split input into words
     const corrections = [];
 
     for (const word of words) {
-        const isCorrect = await hunspell.spell(word);
-        if (!isCorrect) {
-            const suggestions = await hunspell.suggest(word);
-            if (suggestions.length > 0) {
-                corrections.push({ word, suggestion: suggestions[0] }); // Use the first suggestion
+        try {
+            // Check if the word is spelled correctly
+            const isCorrect = await new Promise((resolve, reject) => {
+                hunspell.spell(word, (err, correct) => (err ? reject(err) : resolve(correct)));
+            });
+
+            if (!isCorrect) {
+                // Get suggestions for the misspelled word
+                const suggestions = await new Promise((resolve, reject) => {
+                    hunspell.suggest(word, (err, suggestionList) => (err ? reject(err) : resolve(suggestionList)));
+                });
+
+                if (suggestions.length > 0) {
+                    corrections.push({ word, suggestion: suggestions[0] }); // Use the first suggestion
+                }
             }
+        } catch (error) {
+            console.error(`Error processing word "${word}":`, error);
+            corrections.push({ word, suggestion: null }); // Add null suggestion if an error occurs
         }
     }
 
