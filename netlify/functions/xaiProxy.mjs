@@ -1,12 +1,11 @@
 import fs from 'fs';
 import path from 'path';
-import { fileURLToPath } from 'url';
 import Nodehun from 'nodehun';
 import fetch from 'node-fetch';
 
-// Helper for __dirname in ESM
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+// Simplified file paths for the dictionary files
+const affPath = path.resolve('./netlify/functions/sv_SE.aff');
+const dicPath = path.resolve('./netlify/functions/sv_SE.dic');
 
 // Load Swedish dictionaries
 const affPath = path.resolve(__dirname, 'sv_SE.aff');
