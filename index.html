@@ -47,14 +47,14 @@
         }
 
         .chatbox {
-            height: 65vh;
-            width: 80%; /* Default width for desktops */
-            max-width: 2000px; /* Restrict maximum width */
+            height: 70vh;
+            width: 90%; /* Increase default width for desktops */
+            max-width: 1200px; /* Set a reasonable max-width for wider screens */
             background: white;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             overflow-y: auto;
-            padding: 15px;
+            padding: 20px;
             display: flex;
             flex-direction: column;
             gap: 10px;
@@ -81,9 +81,9 @@
 
         .input-container {
             display: flex;
-            width: 60%; /* Match chatbox width */
-            max-width: 800px;
-            margin-top: 10px;
+            width: 90%; /* Match chatbox width */
+            max-width: 1200px;
+            margin-top: 15px;
         }
 
         #userInput {
@@ -115,12 +115,12 @@
         }
 
         #correctionsContainer {
-            width: 60%;
-            max-width: 800px;
+            width: 90%;
+            max-width: 1200px;
             background: #f9f9f9;
             border-radius: 8px;
             box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-            margin-top: 10px;
+            margin-top: 15px;
             padding: 15px;
             display: flex;
             flex-direction: column;
@@ -152,11 +152,11 @@
 
         @media (max-width: 768px) {
             .chatbox, .input-container, #correctionsContainer {
-                width: 90%; /* Adjust to fit smaller screens */
+                width: 95%; /* Adjust to fit smaller screens */
             }
 
             .chatbox {
-                height: 70vh; /* Increase height slightly */
+                height: 65vh; /* Increase height slightly */
             }
         }
     </style>
