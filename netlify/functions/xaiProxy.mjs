@@ -1,13 +1,17 @@
-const fs = require('fs');
-const path = require('path');
-const Nodehun = require('nodehun');
-const fetch = require('node-fetch');
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import Nodehun from 'nodehun';
+import fetch from 'node-fetch';
+
+// Helper for __dirname in ESM
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Load Swedish dictionaries
 const affPath = path.resolve(__dirname, 'sv_SE.aff');
 const dicPath = path.resolve(__dirname, 'sv_SE.dic');
 
-// Add logging to confirm file paths
 console.log('Loading Swedish dictionary files...');
 console.log(`AFF file path: ${affPath}`);
 console.log(`DIC file path: ${dicPath}`);
@@ -15,7 +19,6 @@ console.log(`DIC file path: ${dicPath}`);
 let affix, dictionary;
 
 try {
-    // Read dictionary files
     affix = fs.readFileSync(affPath);
     dictionary = fs.readFileSync(dicPath);
     console.log('Dictionary files loaded successfully.');
@@ -34,7 +37,7 @@ try {
     throw new Error('Failed to initialize Hunspell.');
 }
 
-exports.handler = async (event) => {
+export async function handler(event) {
     const API_KEY = process.env.XAI_API_KEY;
 
     if (!API_KEY) {
@@ -47,7 +50,6 @@ exports.handler = async (event) => {
 
     let { userInput, proficiency, topic } = JSON.parse(event.body || '{}');
 
-    // Validate inputs
     if (!userInput) {
         return {
             statusCode: 400,
@@ -55,7 +57,6 @@ exports.handler = async (event) => {
         };
     }
 
-    // Determine proficiency prompt
     let proficiencyPrompt = '';
     switch (proficiency) {
         case 'beginner':
@@ -71,7 +72,6 @@ exports.handler = async (event) => {
             proficiencyPrompt = 'Use simple Swedish.';
     }
 
-    // Determine topic prompt
     let topicPrompt = '';
     switch (topic) {
         case 'greetings':
@@ -88,7 +88,6 @@ exports.handler = async (event) => {
     }
 
     try {
-        // Call xAI API
         console.log('Calling xAI API...');
         const response = await fetch('https://api.x.ai/v1/chat/completions', {
             method: 'POST',
@@ -120,14 +119,13 @@ exports.handler = async (event) => {
         const data = await response.json();
         console.log('xAI API response received.');
 
-        // Check spelling errors in the user's input
         const corrections = await getCorrections(userInput);
 
         return {
             statusCode: 200,
             body: JSON.stringify({
                 ...data,
-                corrections, // Attach corrections to the response
+                corrections,
             }),
         };
     } catch (error) {
@@ -137,35 +135,30 @@ exports.handler = async (event) => {
             body: JSON.stringify({ error: 'Failed to fetch data from xAI API or process input.', details: error.message }),
         };
     }
-};
+}
 
-/**
- * Function to detect spelling errors and suggest corrections.
- */
 async function getCorrections(input) {
     const words = input.split(/\s+/);
     const corrections = [];
 
     for (const word of words) {
         try {
-            // Check if the word is spelled correctly
             const isCorrect = await new Promise((resolve, reject) => {
                 hunspell.spell(word, (err, correct) => (err ? reject(err) : resolve(correct)));
             });
 
             if (!isCorrect) {
-                // Get suggestions for the misspelled word
                 const suggestions = await new Promise((resolve, reject) => {
                     hunspell.suggest(word, (err, suggestionList) => (err ? reject(err) : resolve(suggestionList)));
                 });
 
                 if (suggestions.length > 0) {
-                    corrections.push({ word, suggestion: suggestions[0] }); // Use the first suggestion
+                    corrections.push({ word, suggestion: suggestions[0] });
                 }
             }
         } catch (error) {
             console.error(`Error processing word "${word}":`, error.message);
-            corrections.push({ word, suggestion: null }); // Add null suggestion if an error occurs
+            corrections.push({ word, suggestion: null });
         }
     }
 
