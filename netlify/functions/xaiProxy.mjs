@@ -17,34 +17,30 @@ console.log('Loading Swedish dictionary files...');
 console.log(`AFF file path: ${affPath}`);
 console.log(`DIC file path: ${dicPath}`);
 
-let affix, dictionary;
+let affix, dictionary, hunspell;
 
+// Initialize Hunspell during module load
 try {
     affix = fs.readFileSync(affPath);
     dictionary = fs.readFileSync(dicPath);
     console.log('Dictionary files loaded successfully.');
-} catch (error) {
-    console.error('Error loading dictionary files:', error.message);
-    return {
-        statusCode: 500,
-        body: JSON.stringify({ error: 'Failed to load dictionary files.' }),
-    };
-}
 
-// Initialize Hunspell
-let hunspell;
-try {
     hunspell = new Nodehun(affix, dictionary);
     console.log('Hunspell initialized successfully.');
 } catch (error) {
-    console.error('Error initializing Hunspell:', error.message);
-    return {
-        statusCode: 500,
-        body: JSON.stringify({ error: 'Failed to initialize Hunspell.' }),
-    };
+    console.error('Error during initialization:', error.message);
+    hunspell = null; // Indicate that initialization failed
 }
 
 export async function handler(event) {
+    // Check if Hunspell was initialized successfully
+    if (!hunspell) {
+        return {
+            statusCode: 500,
+            body: JSON.stringify({ error: 'Failed to initialize spell checker.' }),
+        };
+    }
+
     const API_KEY = process.env.XAI_API_KEY;
 
     if (!API_KEY) {
