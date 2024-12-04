@@ -47,9 +47,9 @@
         }
 
         .chatbox {
-            height: 60vh;
-            width: 90%;
-            max-width: 600px;
+            height: 65vh;
+            width: 60%; /* Default width for desktops */
+            max-width: 800px; /* Restrict maximum width */
             background: white;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -81,8 +81,8 @@
 
         .input-container {
             display: flex;
-            width: 90%;
-            max-width: 600px;
+            width: 60%; /* Match chatbox width */
+            max-width: 800px;
             margin-top: 10px;
         }
 
@@ -115,8 +115,8 @@
         }
 
         #correctionsContainer {
-            width: 90%;
-            max-width: 600px;
+            width: 60%;
+            max-width: 800px;
             background: #f9f9f9;
             border-radius: 8px;
             box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
@@ -138,6 +138,26 @@
             border-radius: 5px;
             background: #fff;
             box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
+        }
+
+        #correctionsList .incorrect {
+            color: red;
+            font-weight: bold;
+        }
+
+        #correctionsList .suggestion {
+            color: green;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .chatbox, .input-container, #correctionsContainer {
+                width: 90%; /* Adjust to fit smaller screens */
+            }
+
+            .chatbox {
+                height: 70vh; /* Increase height slightly */
+            }
         }
     </style>
 </head>
@@ -230,7 +250,7 @@
             correctionsList.innerHTML = '';
             corrections.forEach((correction) => {
                 const listItem = document.createElement('li');
-                listItem.textContent = `Word: ${correction.word}, Suggestion: ${correction.suggestion}`;
+                listItem.innerHTML = `Incorrect: <span class="incorrect">${correction.word}</span>, Suggested: <span class="suggestion">${correction.suggestion}</span>`;
                 correctionsList.appendChild(listItem);
             });
         }
@@ -260,8 +280,14 @@
 
                 const data = await response.json();
                 typingIndicator.remove();
+
+                // Add bot's response
                 addMessage(data.choices[0]?.message.content || 'No response', false);
-                displayCorrections(data.corrections || []);
+
+                // Display corrections if available
+                if (data.corrections && data.corrections.length > 0) {
+                    displayCorrections(data.corrections);
+                }
             } catch (error) {
                 console.error('Error:', error);
                 typingIndicator.remove();
