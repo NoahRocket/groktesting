@@ -1,64 +1,8 @@
-// netlify/functions/xaiProxy.js
-
-const fs = require('fs');
-const path = require('path');
-const Nodehun = require('nodehun');
-const fetch = require('node-fetch');
-
-// Resolve the directory name
-const __dirname = path.dirname(__filename);
-
-// Resolve dictionary file paths
-const affPath = path.resolve(__dirname, 'sv_SE.aff');
-const dicPath = path.resolve(__dirname, 'sv_SE.dic');
-
-console.log('Loading Swedish dictionary files...');
-console.log(`AFF file path: ${affPath}`);
-console.log(`DIC file path: ${dicPath}`);
-
-let affix, dictionary, hunspell;
-
-// Initialize Hunspell during module load
-try {
-    affix = fs.readFileSync(affPath);
-    dictionary = fs.readFileSync(dicPath);
-    console.log('Dictionary files loaded successfully.');
-
-    hunspell = new Nodehun(affix, dictionary);
-    console.log('Hunspell initialized successfully.');
-} catch (error) {
-    console.error('Error during initialization:', error.message);
-    hunspell = null; // Indicate that initialization failed
-}
-
-exports.handler = async function(event) {
-    // Check if Hunspell was initialized successfully
-    if (!hunspell) {
-        return {
-            statusCode: 500,
-            body: JSON.stringify({ error: 'Failed to initialize spell checker.' }),
-        };
-    }
-
+exports.handler = async (event) => {
     const API_KEY = process.env.XAI_API_KEY;
+    const { userInput, proficiency, topic } = JSON.parse(event.body);
 
-    if (!API_KEY) {
-        console.error('Error: XAI_API_KEY is missing.');
-        return {
-            statusCode: 500,
-            body: JSON.stringify({ error: 'XAI_API_KEY is missing from environment variables.' }),
-        };
-    }
-
-    let { userInput, proficiency, topic } = JSON.parse(event.body || '{}');
-
-    if (!userInput) {
-        return {
-            statusCode: 400,
-            body: JSON.stringify({ error: 'Missing user input.' }),
-        };
-    }
-
+    // Determine proficiency prompt
     let proficiencyPrompt = '';
     switch (proficiency) {
         case 'beginner':
@@ -74,6 +18,7 @@ exports.handler = async function(event) {
             proficiencyPrompt = 'Use simple Swedish.';
     }
 
+    // Determine topic prompt
     let topicPrompt = '';
     switch (topic) {
         case 'greetings':
@@ -90,7 +35,7 @@ exports.handler = async function(event) {
     }
 
     try {
-        console.log('Calling xAI API...');
+        // Make API call to xAI
         const response = await fetch('https://api.x.ai/v1/chat/completions', {
             method: 'POST',
             headers: {
@@ -103,66 +48,36 @@ exports.handler = async function(event) {
                         role: 'system',
                         content: `You are a Swedish tutor. Adjust your responses based on the following:
                         - Proficiency: ${proficiencyPrompt}
-                        - Topic: ${topicPrompt}`,
+                        - Topic: ${topicPrompt}`
                     },
                     { role: 'user', content: userInput },
                 ],
                 model: 'grok-beta',
                 stream: false,
-                temperature: 0.7,
+                temperature: 0.1, // Adjust if needed for variability in responses
             }),
         });
 
-        if (!response.ok) {
-            console.error(`xAI API error: ${response.status} ${response.statusText}`);
-            throw new Error(`xAI API error: ${response.status} ${response.statusText}`);
-        }
-
         const data = await response.json();
-        console.log('xAI API response received.');
 
-        const corrections = await getCorrections(userInput);
+        // Mock corrections for testing purposes (replace with actual corrections if your API supports this)
+        const mockCorrections = [
+            { word: 'hejllo', suggestion: 'hej' },
+            { word: 'marr', suggestion: 'mår' },
+        ];
 
         return {
             statusCode: 200,
             body: JSON.stringify({
                 ...data,
-                corrections,
+                corrections: mockCorrections, // Attach corrections to the response
             }),
         };
     } catch (error) {
-        console.error('Error in xaiProxy handler:', error.message);
+        console.error('Error:', error);
         return {
             statusCode: 500,
-            body: JSON.stringify({ error: 'Failed to fetch data from xAI API or process input.', details: error.message }),
+            body: JSON.stringify({ error: 'Failed to fetch data from xAI API' }),
         };
     }
 };
-
-async function getCorrections(input) {
-    const words = input.split(/\s+/);
-    const corrections = [];
-
-    for (const word of words) {
-        try {
-            const isCorrect = await new Promise((resolve, reject) => {
-                hunspell.spell(word, (err, correct) => (err ? reject(err) : resolve(correct)));
-            });
-
-            if (!isCorrect) {
-                const suggestions = await new Promise((resolve, reject) => {
-                    hunspell.suggest(word, (err, suggestionList) => (err ? reject(err) : resolve(suggestionList)));
-                });
-
-                if (suggestions.length > 0) {
-                    corrections.push({ word, suggestion: suggestions[0] });
-                }
-            }
-        } catch (error) {
-            console.error(`Error processing word "${word}":`, error.message);
-            corrections.push({ word, suggestion: null });
-        }
-    }
-
-    return corrections;
-}
