@@ -1,3 +1,15 @@
+const fs = require('fs');
+const path = require('path');
+const Nodehun = require('nodehun');
+const fetch = require('node-fetch');
+
+// Load Swedish dictionaries
+const affPath = path.resolve(__dirname, 'sv_SE.aff');
+const dicPath = path.resolve(__dirname, 'sv_SE.dic');
+const affix = fs.readFileSync(affPath);
+const dictionary = fs.readFileSync(dicPath);
+const hunspell = new Nodehun(affix, dictionary);
+
 exports.handler = async (event) => {
     const API_KEY = process.env.XAI_API_KEY;
     const { userInput, proficiency, topic } = JSON.parse(event.body);
@@ -35,7 +47,7 @@ exports.handler = async (event) => {
     }
 
     try {
-        // Make API call to xAI
+        // Call xAI API
         const response = await fetch('https://api.x.ai/v1/chat/completions', {
             method: 'POST',
             headers: {
@@ -48,36 +60,53 @@ exports.handler = async (event) => {
                         role: 'system',
                         content: `You are a Swedish tutor. Adjust your responses based on the following:
                         - Proficiency: ${proficiencyPrompt}
-                        - Topic: ${topicPrompt}`
+                        - Topic: ${topicPrompt}`,
                     },
                     { role: 'user', content: userInput },
                 ],
                 model: 'grok-beta',
                 stream: false,
-                temperature: 0.1, // Adjust if needed for variability in responses
+                temperature: 0.7,
             }),
         });
 
         const data = await response.json();
 
-        // Mock corrections for testing purposes (replace with actual corrections if your API supports this)
-        const mockCorrections = [
-            { word: 'hejllo', suggestion: 'hej' },
-            { word: 'marr', suggestion: 'mår' },
-        ];
+        // Check spelling errors in the user's input
+        const corrections = await getCorrections(userInput);
 
         return {
             statusCode: 200,
             body: JSON.stringify({
                 ...data,
-                corrections: mockCorrections, // Attach corrections to the response
+                corrections, // Attach corrections to the response
             }),
         };
     } catch (error) {
         console.error('Error:', error);
         return {
             statusCode: 500,
-            body: JSON.stringify({ error: 'Failed to fetch data from xAI API' }),
+            body: JSON.stringify({ error: 'Failed to fetch data from xAI API or process input' }),
         };
     }
 };
+
+/**
+ * Function to detect spelling errors and suggest corrections.
+ */
+async function getCorrections(input) {
+    const words = input.split(/\s+/);
+    const corrections = [];
+
+    for (const word of words) {
+        const isCorrect = await hunspell.spell(word);
+        if (!isCorrect) {
+            const suggestions = await hunspell.suggest(word);
+            if (suggestions.length > 0) {
+                corrections.push({ word, suggestion: suggestions[0] }); // Use the first suggestion
+            }
+        }
+    }
+
+    return corrections;
+}
