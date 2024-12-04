@@ -1,23 +1,24 @@
 exports.handler = async (event) => {
     const API_KEY = process.env.XAI_API_KEY;
-    const { userInput, level, topic } = JSON.parse(event.body);
+    const { userInput, proficiency, topic } = JSON.parse(event.body);
 
-    // Proficiency and topic adjustments
+    // Determine proficiency prompt
     let proficiencyPrompt = '';
-    switch (level) {
+    switch (proficiency) {
         case 'beginner':
-            proficiencyPrompt = 'Use very simple Swedish with short sentences and basic vocabulary.';
+            proficiencyPrompt = 'Use simple Swedish with short sentences and basic vocabulary.';
             break;
         case 'intermediate':
-            proficiencyPrompt = 'Use intermediate Swedish with common phrases, slightly longer sentences, and moderate vocabulary.';
+            proficiencyPrompt = 'Use intermediate Swedish with common phrases and slightly longer sentences.';
             break;
         case 'advanced':
-            proficiencyPrompt = 'Use advanced Swedish with complex sentence structures and rich vocabulary. Provide detailed responses.';
+            proficiencyPrompt = 'Use advanced Swedish with complex sentence structures and rich vocabulary.';
             break;
         default:
             proficiencyPrompt = 'Use simple Swedish.';
     }
 
+    // Determine topic prompt
     let topicPrompt = '';
     switch (topic) {
         case 'greetings':
@@ -34,7 +35,7 @@ exports.handler = async (event) => {
     }
 
     try {
-        // API call to xAI
+        // Make API call to xAI
         const response = await fetch('https://api.x.ai/v1/chat/completions', {
             method: 'POST',
             headers: {
@@ -45,31 +46,31 @@ exports.handler = async (event) => {
                 messages: [
                     {
                         role: 'system',
-                        content: `You are a Swedish tutor. Adjust your responses to match the following criteria:
+                        content: `You are a Swedish tutor. Adjust your responses based on the following:
                         - Proficiency: ${proficiencyPrompt}
                         - Topic: ${topicPrompt}`
                     },
-                    { role: 'user', content: userInput }
+                    { role: 'user', content: userInput },
                 ],
                 model: 'grok-beta',
                 stream: false,
-                temperature: 0.1,
+                temperature: 0.7, // Adjust if needed for variability in responses
             }),
         });
 
         const data = await response.json();
 
-        // Optional: Mock corrections for error highlighting
+        // Mock corrections for testing purposes (replace with actual corrections if your API supports this)
         const mockCorrections = [
             { word: 'hejllo', suggestion: 'hej' },
-            { word: 'är', suggestion: 'är' },
+            { word: 'marr', suggestion: 'mår' },
         ];
 
         return {
             statusCode: 200,
             body: JSON.stringify({
                 ...data,
-                corrections: mockCorrections, // Attach corrections if available
+                corrections: mockCorrections, // Attach corrections to the response
             }),
         };
     } catch (error) {
