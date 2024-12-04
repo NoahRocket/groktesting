@@ -54,7 +54,7 @@ exports.handler = async (event) => {
                 ],
                 model: 'grok-beta',
                 stream: false,
-                temperature: 0.7, // Adjust if needed for variability in responses
+                temperature: 0.1, // Adjust if needed for variability in responses
             }),
         });
 
