@@ -6,13 +6,54 @@ const fetch = require('node-fetch');
 // Load Swedish dictionaries
 const affPath = path.resolve(__dirname, 'sv_SE.aff');
 const dicPath = path.resolve(__dirname, 'sv_SE.dic');
-const affix = fs.readFileSync(affPath);
-const dictionary = fs.readFileSync(dicPath);
-const hunspell = new Nodehun(affix, dictionary);
+
+// Add logging to confirm file paths
+console.log('Loading Swedish dictionary files...');
+console.log(`AFF file path: ${affPath}`);
+console.log(`DIC file path: ${dicPath}`);
+
+let affix, dictionary;
+
+try {
+    // Read dictionary files
+    affix = fs.readFileSync(affPath);
+    dictionary = fs.readFileSync(dicPath);
+    console.log('Dictionary files loaded successfully.');
+} catch (error) {
+    console.error('Error loading dictionary files:', error.message);
+    throw new Error('Failed to load dictionary files.');
+}
+
+// Initialize Hunspell
+let hunspell;
+try {
+    hunspell = new Nodehun(affix, dictionary);
+    console.log('Hunspell initialized successfully.');
+} catch (error) {
+    console.error('Error initializing Hunspell:', error.message);
+    throw new Error('Failed to initialize Hunspell.');
+}
 
 exports.handler = async (event) => {
     const API_KEY = process.env.XAI_API_KEY;
-    const { userInput, proficiency, topic } = JSON.parse(event.body);
+
+    if (!API_KEY) {
+        console.error('Error: XAI_API_KEY is missing.');
+        return {
+            statusCode: 500,
+            body: JSON.stringify({ error: 'XAI_API_KEY is missing from environment variables.' }),
+        };
+    }
+
+    let { userInput, proficiency, topic } = JSON.parse(event.body || '{}');
+
+    // Validate inputs
+    if (!userInput) {
+        return {
+            statusCode: 400,
+            body: JSON.stringify({ error: 'Missing user input.' }),
+        };
+    }
 
     // Determine proficiency prompt
     let proficiencyPrompt = '';
@@ -48,6 +89,7 @@ exports.handler = async (event) => {
 
     try {
         // Call xAI API
+        console.log('Calling xAI API...');
         const response = await fetch('https://api.x.ai/v1/chat/completions', {
             method: 'POST',
             headers: {
@@ -70,7 +112,13 @@ exports.handler = async (event) => {
             }),
         });
 
+        if (!response.ok) {
+            console.error(`xAI API error: ${response.status} ${response.statusText}`);
+            throw new Error(`xAI API error: ${response.status} ${response.statusText}`);
+        }
+
         const data = await response.json();
+        console.log('xAI API response received.');
 
         // Check spelling errors in the user's input
         const corrections = await getCorrections(userInput);
@@ -83,10 +131,10 @@ exports.handler = async (event) => {
             }),
         };
     } catch (error) {
-        console.error('Error:', error);
+        console.error('Error in xaiProxy handler:', error.message);
         return {
             statusCode: 500,
-            body: JSON.stringify({ error: 'Failed to fetch data from xAI API or process input' }),
+            body: JSON.stringify({ error: 'Failed to fetch data from xAI API or process input.', details: error.message }),
         };
     }
 };
@@ -95,7 +143,7 @@ exports.handler = async (event) => {
  * Function to detect spelling errors and suggest corrections.
  */
 async function getCorrections(input) {
-    const words = input.split(/\s+/); // Split input into words
+    const words = input.split(/\s+/);
     const corrections = [];
 
     for (const word of words) {
@@ -116,7 +164,7 @@ async function getCorrections(input) {
                 }
             }
         } catch (error) {
-            console.error(`Error processing word "${word}":`, error);
+            console.error(`Error processing word "${word}":`, error.message);
             corrections.push({ word, suggestion: null }); // Add null suggestion if an error occurs
         }
     }
