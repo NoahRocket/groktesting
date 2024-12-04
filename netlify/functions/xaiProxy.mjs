@@ -1,11 +1,17 @@
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 import Nodehun from 'nodehun';
 import fetch from 'node-fetch';
 
-// Simplified file paths for the dictionary files
-const affPath = path.resolve('./netlify/functions/sv_SE.aff');
-const dicPath = path.resolve('./netlify/functions/sv_SE.dic');
+// Determine the current directory
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+// Correctly resolve the paths to the dictionary files
+const affPath = path.resolve(__dirname, 'sv_SE.aff');
+const dicPath = path.resolve(__dirname, 'sv_SE.dic');
 
 console.log('Loading Swedish dictionary files...');
 console.log(`AFF file path: ${affPath}`);
@@ -19,7 +25,10 @@ try {
     console.log('Dictionary files loaded successfully.');
 } catch (error) {
     console.error('Error loading dictionary files:', error.message);
-    throw new Error('Failed to load dictionary files.');
+    return {
+        statusCode: 500,
+        body: JSON.stringify({ error: 'Failed to load dictionary files.' }),
+    };
 }
 
 // Initialize Hunspell
@@ -29,7 +38,10 @@ try {
     console.log('Hunspell initialized successfully.');
 } catch (error) {
     console.error('Error initializing Hunspell:', error.message);
-    throw new Error('Failed to initialize Hunspell.');
+    return {
+        statusCode: 500,
+        body: JSON.stringify({ error: 'Failed to initialize Hunspell.' }),
+    };
 }
 
 export async function handler(event) {
