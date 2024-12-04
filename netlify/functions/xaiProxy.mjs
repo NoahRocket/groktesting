@@ -7,10 +7,6 @@ import fetch from 'node-fetch';
 const affPath = path.resolve('./netlify/functions/sv_SE.aff');
 const dicPath = path.resolve('./netlify/functions/sv_SE.dic');
 
-// Load Swedish dictionaries
-const affPath = path.resolve(__dirname, 'sv_SE.aff');
-const dicPath = path.resolve(__dirname, 'sv_SE.dic');
-
 console.log('Loading Swedish dictionary files...');
 console.log(`AFF file path: ${affPath}`);
 console.log(`DIC file path: ${dicPath}`);
