@@ -3,176 +3,106 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat with xAI</title>
-    <!-- Add EB Garamond from Google Fonts -->
+    <title>Learn Swedish</title>
     <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;700&display=swap" rel="stylesheet">
     <style>
+        /* Add styles for the landing page and settings button */
         body {
             font-family: 'EB Garamond', serif;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
+            justify-content: center;
             height: 100vh;
             margin: 0;
             background-color: #f4f4f9;
-            flex-direction: column;
+        }
+
+        .hidden {
+            display: none;
         }
 
         h1 {
-            margin: 20px 0;
-            font-size: 1.5em;
             color: #333;
-            font-family: 'EB Garamond', serif;
-            font-weight: bold;
         }
 
-        .chat-container {
-            width: 90%;
-            max-width: 600px;
-            background: #fff;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .settings-container {
             display: flex;
             flex-direction: column;
-        }
-
-        .chatbox {
-            height: 400px;
-            padding: 20px;
-            overflow-y: auto;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .chatbox .message {
-            margin-bottom: 15px;
-            padding: 10px 15px;
-            border-radius: 8px;
-            max-width: 75%;
-            word-wrap: break-word;
-        }
-
-        .chatbox .message.user {
-            margin-left: auto;
-            background-color: #007bff;
-            color: #fff;
-            text-align: left;
-            width: fit-content;
-            max-width: 75%;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-            padding: 10px 15px;
-            border-radius: 8px;
-            font-family: 'EB Garamond', serif;
-        }
-
-        .chatbox .message.bot {
-            margin-right: auto;
-            background-color: #f1f0f0;
-            color: #333;
-            text-align: left;
-            width: fit-content;
-            font-family: 'EB Garamond', serif;
-        }
-
-        .input-container {
-            display: flex;
-            padding: 10px;
-            border-top: 1px solid #ddd;
-        }
-
-        #userInput {
-            flex: 1;
-            padding: 15px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            outline: none;
-            font-size: 1.2em;
-            font-family: 'EB Garamond', serif;
-        }
-
-        #sendButton {
-            margin-left: 10px;
-            padding: 15px 20px;
-            border: none;
-            border-radius: 4px;
-            background-color: #007bff;
-            color: #fff;
-            cursor: pointer;
-            font-size: 1em;
-            font-family: 'EB Garamond', serif;
-        }
-
-        #sendButton:hover {
-            background-color: #0056b3;
+            align-items: center;
         }
     </style>
 </head>
 <body>
-    <h1>This was made by Noah, enjoy!</h1>
-    <div class="chat-container">
+    <div id="landingPage">
+        <h1>Welcome to Learn Swedish!</h1>
+        <button id="startButton">Start Practicing</button>
+    </div>
+
+    <div id="settingsPage" class="hidden">
+        <h1>Settings</h1>
+        <label for="proficiency">Choose your level:</label>
+        <select id="proficiency">
+            <option value="beginner">Beginner</option>
+            <option value="intermediate">Intermediate</option>
+            <option value="advanced">Advanced</option>
+        </select>
+        <button id="startChat">Start Chat</button>
+    </div>
+
+    <div id="chatContainer" class="hidden">
         <div id="chatbox" class="chatbox"></div>
         <div class="input-container">
             <input type="text" id="userInput" placeholder="Type your message here...">
             <button id="sendButton">Send</button>
         </div>
+        <p id="sessionLimit">Messages left: 10</p>
     </div>
 
     <script>
-        const chatbox = document.getElementById('chatbox');
-        const userInputField = document.getElementById('userInput');
-        const sendButton = document.getElementById('sendButton');
+        const startButton = document.getElementById('startButton');
+        const startChatButton = document.getElementById('startChat');
+        const landingPage = document.getElementById('landingPage');
+        const settingsPage = document.getElementById('settingsPage');
+        const chatContainer = document.getElementById('chatContainer');
+        const sessionLimitText = document.getElementById('sessionLimit');
 
-        // Utility function to format markdown (basic implementation for bold and italics)
-        function formatMarkdown(text) {
-            // Bold formatting: **text**
-            text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-            // Italic formatting: *text*
-            text = text.replace(/\*(.*?)\*/g, '<em>$1</em>');
-            return text;
-        }
+        let messageLimit = 10;
 
-        function addMessage(content, isUser = false) {
-            const message = document.createElement('div');
-            message.className = `message ${isUser ? 'user' : 'bot'}`;
-            message.innerHTML = isUser ? content : formatMarkdown(content); // Apply formatting for bot messages
-            chatbox.appendChild(message);
-            chatbox.scrollTop = chatbox.scrollHeight; // Scroll to the bottom
-        }
+        // Show settings page after "Start Practicing"
+        startButton.addEventListener('click', () => {
+            landingPage.classList.add('hidden');
+            settingsPage.classList.remove('hidden');
+        });
 
-        async function sendMessage() {
-            const userInput = userInputField.value.trim();
-            if (!userInput) return;
+        // Show chat page after "Start Chat"
+        startChatButton.addEventListener('click', () => {
+            settingsPage.classList.add('hidden');
+            chatContainer.classList.remove('hidden');
+        });
 
-            // Display the user's message
-            addMessage(userInput, true);
-
-            // Clear input field
-            userInputField.value = '';
-
-            // Call the Netlify Function
-            try {
-                const response = await fetch('/.netlify/functions/xaiProxy', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ userInput }),
-                });
-
-                const data = await response.json();
-
-                // Display the bot's response
-                addMessage(data.choices[0].message.content, false);
-            } catch (error) {
-                console.error('Error:', error);
-                addMessage('Error: Unable to fetch response.', false);
+        // Decrement session limit on send
+        function decrementSessionLimit() {
+            messageLimit--;
+            sessionLimitText.innerText = `Messages left: ${messageLimit}`;
+            if (messageLimit <= 0) {
+                alert('Session limit reached! Please start a new session.');
             }
         }
-
-        // Add event listeners
-        sendButton.addEventListener('click', sendMessage);
-        userInputField.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') sendMessage();
-        });
     </script>
 </body>
 </html>
-
