@@ -1,9 +1,0 @@
-{
-  "name": "swedish-learning",
-  "version": "1.0.0",
-  "main": "index.js",
-  "dependencies": {
-    "nodehun": "^3.0.0",
-    "node-fetch": "^2.6.7"
-  }
-}
