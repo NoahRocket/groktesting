@@ -1,15 +1,14 @@
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
-import Nodehun from 'nodehun';
-import fetch from 'node-fetch';
+// netlify/functions/xaiProxy.js
 
-// Determine the current directory
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const fs = require('fs');
+const path = require('path');
+const Nodehun = require('nodehun');
+const fetch = require('node-fetch');
 
-// Correctly resolve the paths to the dictionary files
+// Resolve the directory name
+const __dirname = path.dirname(__filename);
+
+// Resolve dictionary file paths
 const affPath = path.resolve(__dirname, 'sv_SE.aff');
 const dicPath = path.resolve(__dirname, 'sv_SE.dic');
 
@@ -32,7 +31,7 @@ try {
     hunspell = null; // Indicate that initialization failed
 }
 
-export async function handler(event) {
+exports.handler = async function(event) {
     // Check if Hunspell was initialized successfully
     if (!hunspell) {
         return {
@@ -138,7 +137,7 @@ export async function handler(event) {
             body: JSON.stringify({ error: 'Failed to fetch data from xAI API or process input.', details: error.message }),
         };
     }
-}
+};
 
 async function getCorrections(input) {
     const words = input.split(/\s+/);
