@@ -1,6 +1,6 @@
 exports.handler = async (event) => {
-    const API_KEY = process.env.XAI_API_KEY; // Securely access your API key
-    const { userInput } = JSON.parse(event.body);
+    const API_KEY = process.env.XAI_API_KEY;
+    const { userInput, level, topic } = JSON.parse(event.body);
 
     try {
         const response = await fetch('https://api.x.ai/v1/chat/completions', {
@@ -10,7 +10,10 @@ exports.handler = async (event) => {
                 'Authorization': `Bearer ${API_KEY}`
             },
             body: JSON.stringify({
-                messages: [{ role: 'user', content: userInput }],
+                messages: [
+                    { role: 'system', content: `You are a Swedish tutor for ${level} learners.` },
+                    { role: 'user', content: userInput }
+                ],
                 model: 'grok-beta',
                 stream: false,
                 temperature: 0
