@@ -6,6 +6,8 @@
     <title>Gustaf</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
+        /* Existing styles... */
+
         :root {
             --base-font-size: 16px;
             --primary-color: #007bff;
@@ -211,50 +213,6 @@
         #startChat:hover {
             transform: scale(1.05);
             background-color: var(--primary-hover);
-        }
-
-        /* Suggested Phrases Page */
-        .suggested-phrases-page {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            background: #fff;
-            padding: 20px;
-            gap: 20px;
-        }
-
-        .suggested-phrases-page h1 {
-            font-size: 1.5rem;
-            color: #333;
-            margin-bottom: 20px;
-        }
-
-        .phrase-bubbles {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            width: 90%;
-            max-width: 600px;
-        }
-
-        .phrase-button {
-            padding: 15px 20px;
-            border: none;
-            border-radius: 20px;
-            background-color: var(--light-bg);
-            color: #333;
-            font-size: 1rem;
-            cursor: pointer;
-            box-shadow: 0px 2px 4px rgba(0,0,0,0.1);
-            transition: var(--transition);
-            text-align: left;
-        }
-
-        .phrase-button:hover {
-            background-color: var(--primary-hover);
-            color: #fff;
         }
 
         /* CHAT INTERFACE */
@@ -542,20 +500,6 @@
                 width: 100%;
                 font-size: 0.9rem;
             }
-
-            /* Suggested Phrases Page adjustments */
-            .suggested-phrases-page {
-                padding: 15px;
-            }
-
-            .suggested-phrases-page h1 {
-                font-size: 1.2rem;
-            }
-
-            .phrase-button {
-                font-size: 0.9rem;
-                padding: 12px 15px;
-            }
         }
     </style>
 </head>
@@ -600,14 +544,6 @@
         </div>
     </div>
 
-    <!-- New Suggested Phrases Page -->
-    <div class="suggested-phrases-page page hidden" id="suggestedPhrasesPage">
-        <h1>Choose a Starting Phrase</h1>
-        <div class="phrase-bubbles" id="phraseBubbles">
-            <!-- Phrase buttons will be dynamically inserted here -->
-        </div>
-    </div>
-
     <div class="chat-container page hidden" id="chatContainer">
         <div class="chat-header">
             <h2 id="conversationInfo"></h2>
@@ -628,14 +564,13 @@
         </div>
     </div>
 
+    <!-- Existing Scripts -->
     <script>
         const startButton = document.getElementById('startButton');
         const startChatButton = document.getElementById('startChat');
         const landingPage = document.getElementById('landingPage');
         const settingsPage = document.getElementById('settingsPage');
-        const suggestedPhrasesPage = document.getElementById('suggestedPhrasesPage'); // New
         const chatContainer = document.getElementById('chatContainer');
-        const phraseBubbles = document.getElementById('phraseBubbles'); // New
         const sessionLimitText = document.getElementById('sessionLimit');
         const chatbox = document.getElementById('chatbox');
         const userInputField = document.getElementById('userInput');
@@ -650,25 +585,6 @@
         let selectedProficiency = '';
         let selectedTopic = '';
         let correctionsVisible = false;
-
-        // Define suggested phrases per topic
-        const suggestedPhrases = {
-            'greetings': [
-                'Hej! Hur mår du?',
-                'God morgon! Vad har du gjort idag?',
-                'Trevligt att träffas!'
-            ],
-            'ordering-food': [
-                'Jag skulle vilja beställa en kaffe, tack.',
-                'Kan jag få menyn, snälla?',
-                'Jag är redo att beställa nu.'
-            ],
-            'travel-phrases': [
-                'Var ligger närmaste busshållplats?',
-                'Hur tar jag mig till centrala stationen?',
-                'Kan du hjälpa mig med riktningen till museet?'
-            ]
-        };
 
         function switchPage(fromPage, toPage) {
             fromPage.classList.remove('visible');
@@ -687,36 +603,14 @@
             switchPage(landingPage, settingsPage);
         });
 
-        startChatButton.addEventListener('click', () => {
+        startChatButton.addEventListener('click', async () => {
             selectedProficiency = document.getElementById('proficiency').value;
             selectedTopic = document.getElementById('topics').value;
-
-            // Check if there are suggested phrases for the selected topic
-            if (suggestedPhrases[selectedTopic] && suggestedPhrases[selectedTopic].length > 0) {
-                // Populate the suggested phrases
-                phraseBubbles.innerHTML = ''; // Clear any existing phrases
-                suggestedPhrases[selectedTopic].forEach(phrase => {
-                    const button = document.createElement('button');
-                    button.className = 'phrase-button';
-                    button.innerText = phrase;
-                    button.addEventListener('click', () => {
-                        // Start the chat with the selected phrase
-                        switchPage(settingsPage, chatContainer);
-                        conversationInfo.innerText = `Topic: ${capitalize(selectedTopic)} | Level: ${capitalize(selectedProficiency)}`;
-                        addMessage(phrase, true); // Add the phrase as user's message
-                        decrementSessionLimit();
-                        sendToBackend(phrase);
-                    });
-                    phraseBubbles.appendChild(button);
-                });
-
-                // Switch to the suggested phrases page
-                switchPage(settingsPage, suggestedPhrasesPage);
-            } else {
-                // If no suggested phrases, proceed directly to chat
-                switchPage(settingsPage, chatContainer);
-                conversationInfo.innerText = `Topic: ${capitalize(selectedTopic)} | Level: ${capitalize(selectedProficiency)}`;
-            }
+            switchPage(settingsPage, chatContainer);
+            conversationInfo.innerText = `Topic: ${capitalize(selectedTopic)} | Level: ${capitalize(selectedProficiency)}`;
+            
+            // Initiate conversation by sending a special 'init' command
+            await sendToBackend('init');
         });
 
         function capitalize(str) {
@@ -766,7 +660,14 @@
 
         // Function to send user input to backend
         async function sendToBackend(userInput) {
-            if (messageLimit <= 0) return;
+            if (messageLimit <= 0 && userInput !== 'init') return;
+
+            // If initiating the conversation, do not decrement the session limit
+            if (userInput !== 'init') {
+                addMessage(userInput, true);
+                userInputField.value = '';
+                decrementSessionLimit();
+            }
 
             const typingIndicator = document.createElement('div');
             typingIndicator.className = 'message bot';
@@ -801,9 +702,6 @@
         async function sendMessage() {
             const userInput = userInputField.value.trim();
             if (!userInput || messageLimit <= 0) return;
-            addMessage(userInput, true);
-            userInputField.value = '';
-            decrementSessionLimit();
             sendToBackend(userInput);
         }
 
