@@ -14,7 +14,10 @@
             justify-content: center;
             height: 100vh;
             margin: 0;
-            /* Animated gradient background inspired by Swedish flag colors */
+        }
+
+        /* Animated background class */
+        .animated-bg {
             background: linear-gradient(120deg, #F7E400, #0056b3);
             background-size: 400% 400%;
             animation: gradientBG 10s ease infinite;
@@ -30,6 +33,11 @@
             100% {
                 background-position: 0% 50%;
             }
+        }
+
+        /* Static background class (no animation) */
+        .static-bg {
+            background: #0056b3; /* Static dark blue */
         }
 
         .hidden {
@@ -84,7 +92,6 @@
         .chatbox {
             height: 60vh;
             width: 90%;
-            max-width: 600px;
             background: white;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -117,7 +124,6 @@
         .input-container {
             display: flex;
             width: 90%;
-            max-width: 600px;
             margin-top: 10px;
         }
 
@@ -152,7 +158,6 @@
 
         #correctionsContainer {
             width: 90%;
-            max-width: 600px;
             background: #f9f9f9;
             border-radius: 8px;
             box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
@@ -244,10 +249,10 @@
 
     </style>
 </head>
-<body>
+<body class="animated-bg">
     <!-- Landing Page -->
     <div id="landingPage">
-        <h1>Welcome to Gustaf!</h1>
+        <h1>Welcome to Learn Swedish!</h1>
         <h3>Master Swedish with bite-sized conversations tailored just for you.</h3>
         <button id="startButton">Start Practicing</button>
     </div>
@@ -313,8 +318,13 @@
         let selectedTopic = '';
 
         startButton.addEventListener('click', () => {
+            // Hide landing and show settings
             landingPage.classList.add('hidden');
             settingsPage.classList.remove('hidden');
+            
+            // Stop animation by removing animated-bg class and adding static-bg
+            document.body.classList.remove('animated-bg');
+            document.body.classList.add('static-bg');
         });
 
         startChatButton.addEventListener('click', () => {
