@@ -75,6 +75,7 @@
             align-items: center;
             justify-content: center;
             gap: 10px;
+            padding: 0 10px; /* Added padding to prevent overflow */
         }
 
         .landing-page h1 .icon {
@@ -92,6 +93,7 @@
             font-size: 1rem;
             color: #555;
             font-weight: 400;
+            padding: 0 10px; /* Added padding to prevent overflow */
         }
 
         .start-button {
@@ -119,6 +121,8 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            padding: 10px; /* Added padding for better spacing on mobile */
+            box-sizing: border-box; /* Ensure padding is included in width calculations */
         }
 
         .settings-card {
@@ -132,6 +136,7 @@
             align-items: center;
             gap: 20px;
             width: 300px;
+            box-sizing: border-box; /* Ensure padding is included in width calculations */
         }
 
         .settings-card h1 {
@@ -162,6 +167,7 @@
             flex-direction: column;
             align-items: flex-start;
             font-size: 1rem;
+            width: 100%; /* Ensure full width on mobile */
         }
 
         .control-group label {
@@ -183,6 +189,7 @@
             border: 1px solid #ccc;
             border-radius: 5px;
             transition: var(--transition);
+            box-sizing: border-box; /* Ensure padding is included in width calculations */
         }
 
         .control-group select:hover {
@@ -206,6 +213,50 @@
             background-color: var(--primary-hover);
         }
 
+        /* Suggested Phrases Page */
+        .suggested-phrases-page {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background: #fff;
+            padding: 20px;
+            gap: 20px;
+        }
+
+        .suggested-phrases-page h1 {
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .phrase-bubbles {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 90%;
+            max-width: 600px;
+        }
+
+        .phrase-button {
+            padding: 15px 20px;
+            border: none;
+            border-radius: 20px;
+            background-color: var(--light-bg);
+            color: #333;
+            font-size: 1rem;
+            cursor: pointer;
+            box-shadow: 0px 2px 4px rgba(0,0,0,0.1);
+            transition: var(--transition);
+            text-align: left;
+        }
+
+        .phrase-button:hover {
+            background-color: var(--primary-hover);
+            color: #fff;
+        }
+
         /* CHAT INTERFACE */
         .chat-container {
             display: flex;
@@ -222,12 +273,15 @@
             box-shadow: 0px 4px 6px rgba(0,0,0,0.1);
             z-index: 999;
             text-align: center;
+            box-sizing: border-box; /* Ensure padding is included in width calculations */
         }
 
         .chat-header h2 {
             margin: 0;
             font-size: 1.2rem;
             color: #333;
+            white-space: normal; /* Allow text to wrap */
+            word-wrap: break-word; /* Allow long words to wrap */
         }
 
         .chatbox {
@@ -243,6 +297,7 @@
             margin: 20px auto; /* Center the chatbox */
             width: 90%;
             max-width: 600px;
+            box-sizing: border-box; /* Ensure padding is included in width calculations */
         }
 
         .message {
@@ -284,6 +339,7 @@
             width: 90%;
             max-width: 600px;
             margin: 0 auto 20px; /* Center and add bottom margin */
+            box-sizing: border-box; /* Ensure padding is included in width calculations */
         }
 
         /* Shortened placeholder text to avoid pushing the layout */
@@ -294,6 +350,7 @@
             border: 1px solid #ccc;
             font-size: 1rem;
             transition: var(--transition);
+            box-sizing: border-box; /* Ensure padding is included in width calculations */
         }
 
         #userInput::placeholder {
@@ -309,6 +366,7 @@
             border: none;
             cursor: pointer;
             transition: var(--transition);
+            box-sizing: border-box; /* Ensure padding is included in width calculations */
         }
 
         #sendButton:hover {
@@ -324,6 +382,7 @@
             margin: 0 auto 10px auto; /* Center and add bottom margin */
             width: 90%;
             max-width: 600px;
+            box-sizing: border-box; /* Ensure padding is included in width calculations */
         }
 
         .progress {
@@ -336,6 +395,7 @@
             overflow: hidden;
             position: relative;
             margin: 0 auto 20px auto; /* Center and add bottom margin */
+            box-sizing: border-box; /* Ensure padding is included in width calculations */
         }
 
         .progress-bar {
@@ -353,10 +413,11 @@
             width: 90%;
             max-width: 600px;
             overflow: hidden;
-            transition: max-height 0.3s ease;
+            transition: max-height 0.3s ease, padding 0.3s ease;
             max-height: 0;
             margin: 0 auto;
             padding: 0 15px;
+            box-sizing: border-box; /* Ensure padding is included in width calculations */
         }
 
         #correctionsContainer.visible {
@@ -382,6 +443,7 @@
             cursor: pointer;
             transition: var(--transition);
             margin: 0;
+            box-sizing: border-box; /* Ensure padding is included in width calculations */
         }
 
         #toggleCorrections:hover {
@@ -405,15 +467,94 @@
 
         /* Responsive Design */
         @media (max-width: 600px) {
+            /* Adjust settings card padding */
+            .settings-card {
+                padding: 20px;
+                width: 100%; /* Full width on mobile */
+                max-width: none; /* Remove max-width */
+                border-radius: 10px;
+            }
+
+            /* Control group select full width */
             .control-group select {
                 width: 100%;
             }
+
+            /* Stack control rows vertically */
             .control-row {
                 flex-direction: column;
                 gap: 10px;
             }
-            .chatbox, .input-container, #sessionLimit, .progress, #correctionsContainer {
+
+            /* Adjust chatbox margins */
+            .chatbox {
+                margin: 10px auto; /* Reduce top/bottom margins */
+            }
+
+            /* Ensure input-container and other elements fit within viewport */
+            .input-container {
+                padding: 0 10px; /* Reduce horizontal padding */
+            }
+
+            #sendButton {
+                padding: 10px; /* Reduce padding to fit */
+            }
+
+            /* Ensure headers and buttons wrap text properly */
+            .chat-header h2 {
+                font-size: 1rem; /* Reduce font size */
+            }
+
+            .landing-page h1 {
+                font-size: 1.5rem; /* Reduce font size */
+                padding: 0 5px; /* Further reduce padding */
+            }
+
+            .subheader {
+                font-size: 0.9rem; /* Reduce font size */
+                padding: 0 5px; /* Further reduce padding */
+            }
+
+            /* Hide corrections section on mobile */
+            #correctionsContainer {
+                display: none;
+            }
+
+            /* Alternatively, if you want to allow toggling visibility on mobile, you can use:
+            #correctionsContainer {
+                max-height: 0;
+                padding: 0 15px;
+            }
+            #correctionsContainer.visible {
+                max-height: 300px;
+                padding: 15px;
+            }
+            */
+
+            /* Ensure progress bar fits within mobile view */
+            .progress {
                 width: 100%;
+                max-width: none;
+            }
+
+            /* Adjust session limit text */
+            #sessionLimit {
+                width: 100%;
+                font-size: 0.9rem;
+            }
+
+            /* Suggested Phrases Page adjustments */
+            .suggested-phrases-page {
+                padding: 15px;
+            }
+
+            .suggested-phrases-page h1 {
+                font-size: 1.2rem;
+            }
+
+            .phrase-button {
+                font-size: 0.9rem;
+                padding: 12px 15px;
             }
         }
     </style>
@@ -459,6 +600,14 @@
         </div>
     </div>
 
+    <!-- New Suggested Phrases Page -->
+    <div class="suggested-phrases-page page hidden" id="suggestedPhrasesPage">
+        <h1>Choose a Starting Phrase</h1>
+        <div class="phrase-bubbles" id="phraseBubbles">
+            <!-- Phrase buttons will be dynamically inserted here -->
+        </div>
+    </div>
+
     <div class="chat-container page hidden" id="chatContainer">
         <div class="chat-header">
             <h2 id="conversationInfo"></h2>
@@ -484,7 +633,9 @@
         const startChatButton = document.getElementById('startChat');
         const landingPage = document.getElementById('landingPage');
         const settingsPage = document.getElementById('settingsPage');
+        const suggestedPhrasesPage = document.getElementById('suggestedPhrasesPage'); // New
         const chatContainer = document.getElementById('chatContainer');
+        const phraseBubbles = document.getElementById('phraseBubbles'); // New
         const sessionLimitText = document.getElementById('sessionLimit');
         const chatbox = document.getElementById('chatbox');
         const userInputField = document.getElementById('userInput');
@@ -499,6 +650,25 @@
         let selectedProficiency = '';
         let selectedTopic = '';
         let correctionsVisible = false;
+
+        // Define suggested phrases per topic
+        const suggestedPhrases = {
+            'greetings': [
+                'Hej! Hur mår du?',
+                'God morgon! Vad har du gjort idag?',
+                'Trevligt att träffas!'
+            ],
+            'ordering-food': [
+                'Jag skulle vilja beställa en kaffe, tack.',
+                'Kan jag få menyn, snälla?',
+                'Jag är redo att beställa nu.'
+            ],
+            'travel-phrases': [
+                'Var ligger närmaste busshållplats?',
+                'Hur tar jag mig till centrala stationen?',
+                'Kan du hjälpa mig med riktningen till museet?'
+            ]
+        };
 
         function switchPage(fromPage, toPage) {
             fromPage.classList.remove('visible');
@@ -520,8 +690,33 @@
         startChatButton.addEventListener('click', () => {
             selectedProficiency = document.getElementById('proficiency').value;
             selectedTopic = document.getElementById('topics').value;
-            switchPage(settingsPage, chatContainer);
-            conversationInfo.innerText = `Topic: ${capitalize(selectedTopic)} | Level: ${capitalize(selectedProficiency)}`;
+
+            // Check if there are suggested phrases for the selected topic
+            if (suggestedPhrases[selectedTopic] && suggestedPhrases[selectedTopic].length > 0) {
+                // Populate the suggested phrases
+                phraseBubbles.innerHTML = ''; // Clear any existing phrases
+                suggestedPhrases[selectedTopic].forEach(phrase => {
+                    const button = document.createElement('button');
+                    button.className = 'phrase-button';
+                    button.innerText = phrase;
+                    button.addEventListener('click', () => {
+                        // Start the chat with the selected phrase
+                        switchPage(settingsPage, chatContainer);
+                        conversationInfo.innerText = `Topic: ${capitalize(selectedTopic)} | Level: ${capitalize(selectedProficiency)}`;
+                        addMessage(phrase, true); // Add the phrase as user's message
+                        decrementSessionLimit();
+                        sendToBackend(phrase);
+                    });
+                    phraseBubbles.appendChild(button);
+                });
+
+                // Switch to the suggested phrases page
+                switchPage(settingsPage, suggestedPhrasesPage);
+            } else {
+                // If no suggested phrases, proceed directly to chat
+                switchPage(settingsPage, chatContainer);
+                conversationInfo.innerText = `Topic: ${capitalize(selectedTopic)} | Level: ${capitalize(selectedProficiency)}`;
+            }
         });
 
         function capitalize(str) {
@@ -569,12 +764,9 @@
             }
         });
 
-        async function sendMessage() {
-            const userInput = userInputField.value.trim();
-            if (!userInput || messageLimit <= 0) return;
-            addMessage(userInput, true);
-            userInputField.value = '';
-            decrementSessionLimit();
+        // Function to send user input to backend
+        async function sendToBackend(userInput) {
+            if (messageLimit <= 0) return;
 
             const typingIndicator = document.createElement('div');
             typingIndicator.className = 'message bot';
@@ -583,7 +775,6 @@
             chatbox.scrollTop = chatbox.scrollHeight;
 
             try {
-                // Replace with your endpoint
                 const response = await fetch('/.netlify/functions/xaiProxy', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -605,6 +796,15 @@
                 typingIndicator.remove();
                 addMessage('Error: Unable to fetch response.', false);
             }
+        }
+
+        async function sendMessage() {
+            const userInput = userInputField.value.trim();
+            if (!userInput || messageLimit <= 0) return;
+            addMessage(userInput, true);
+            userInputField.value = '';
+            decrementSessionLimit();
+            sendToBackend(userInput);
         }
 
         sendButton.addEventListener('click', sendMessage);
