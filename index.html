@@ -32,6 +32,11 @@
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.3s ease-in-out;
+            position: absolute;
+            top: 0; 
+            left: 0;
+            width: 100%;
+            height: 100vh;
         }
 
         .visible {
@@ -114,11 +119,13 @@
 
         /* SETTINGS PAGE */
         .settings-page {
+            background: linear-gradient(to bottom, #e3f2fd, #bbdefb);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            background: linear-gradient(to bottom, #e3f2fd, #bbdefb);
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
         }
 
         .settings-card {
@@ -161,7 +168,6 @@
             flex-direction: column;
             align-items: flex-start;
             font-size: 1rem;
-            position: relative;
         }
 
         .control-group label {
@@ -213,6 +219,10 @@
             justify-content:flex-start;
             background:#fff;
             overflow-y:auto;
+            opacity:0;
+            transition:opacity 0.3s ease-in-out;
+            box-sizing:border-box;
+            padding-top:80px; /* Space for header */
             padding-bottom:50px;
         }
 
@@ -222,7 +232,7 @@
             width:100%;
             display:flex;
             align-items:center;
-            justify-content:space-between;
+            justify-content:center;
             padding:10px 20px;
             background:#f5f5f5;
             box-shadow:0px 4px 6px rgba(0,0,0,0.1);
@@ -235,10 +245,11 @@
             color: #333;
         }
 
+        /* Constrain widths and add vertical spacing inside chat container */
         .chat-container > * {
             max-width: 600px;
             width: 90%;
-            margin: 0 auto;
+            margin: 0 auto 20px;
         }
 
         .chatbox {
@@ -250,7 +261,7 @@
             display:flex;
             flex-direction:column;
             gap:10px;
-            margin-top:20px;
+            margin-top:0;
         }
 
         .message {
@@ -287,7 +298,7 @@
             align-items: center;
             justify-content: space-between;
             gap: 10px;
-            margin-top:20px;
+            margin-top:0; /* It's already spaced by parent > * { margin-bottom:20px } */
         }
 
         #userInput {
@@ -320,10 +331,10 @@
         }
 
         #sessionLimit {
-            margin-top: 10px;
             font-size: 1rem;
             color: #333;
             text-align: center;
+            margin:0; /* Let parent spacing handle vertical space */
         }
 
         .progress {
@@ -331,9 +342,9 @@
             background: #eee;
             height: 10px;
             border-radius: 5px;
-            margin: 5px 0;
             overflow: hidden;
             position: relative;
+            margin-top:0;
         }
 
         .progress-bar {
@@ -349,28 +360,28 @@
             background: #f9f9f9;
             border-radius: 10px;
             box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-            margin: 20px 0;
             width: 100%;
             overflow: hidden;
             transition: max-height 0.3s ease;
             max-height: 0;
+            margin-bottom:20px; /* Ensure spacing below corrections */
         }
 
         #correctionsContainer.visible {
             max-height: 300px;
         }
 
+        /* Make corrections title and toggle button align nicely on the same line */
         #correctionsContainer h3 {
-            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             margin: 0 0 10px 0;
             font-size: 1.1rem;
             position: relative;
         }
 
         #toggleCorrections {
-            position: absolute;
-            bottom: 10px;
-            right: 10px;
             font-size: 0.9rem;
             padding: 5px 10px;
             border-radius: 5px;
@@ -379,6 +390,8 @@
             border: none;
             cursor: pointer;
             transition: var(--transition);
+            position: static;
+            margin:0;
         }
 
         #toggleCorrections:hover {
@@ -466,8 +479,7 @@
             <div class="progress-bar" id="progressBar"></div>
         </div>
         <div id="correctionsContainer">
-            <h3>Corrections</h3>
-            <button id="toggleCorrections">Toggle Corrections</button>
+            <h3>Corrections <button id="toggleCorrections">Toggle Corrections</button></h3>
             <ul id="correctionsList"></ul>
         </div>
     </div>
@@ -497,10 +509,9 @@
             fromPage.classList.remove('visible');
             fromPage.classList.add('hidden');
 
-            // Wait for transition to end
+            // Wait for the transition to end before showing the next page
             fromPage.addEventListener('transitionend', function handler() {
                 fromPage.removeEventListener('transitionend', handler);
-                // Now show toPage
                 toPage.classList.remove('hidden');
                 toPage.classList.add('visible');
             }, { once: true });
