@@ -6,8 +6,6 @@
     <title>Gustaf</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Existing styles... */
-
         :root {
             --base-font-size: 16px;
             --primary-color: #007bff;
@@ -564,7 +562,6 @@
         </div>
     </div>
 
-    <!-- Existing Scripts -->
     <script>
         const startButton = document.getElementById('startButton');
         const startChatButton = document.getElementById('startChat');
@@ -660,10 +657,10 @@
 
         // Function to send user input to backend
         async function sendToBackend(userInput) {
-            if (messageLimit <= 0 && userInput !== 'init') return;
+            if (messageLimit <= 0 && userInput.toLowerCase() !== 'init') return;
 
             // If initiating the conversation, do not decrement the session limit
-            if (userInput !== 'init') {
+            if (userInput.toLowerCase() !== 'init') {
                 addMessage(userInput, true);
                 userInputField.value = '';
                 decrementSessionLimit();
