@@ -23,7 +23,6 @@
             font-family: 'Inter', 'SF Pro', Arial, sans-serif;
             margin: 0;
             padding: 0;
-            overflow: hidden;
             position: relative;
         }
 
@@ -33,8 +32,8 @@
             transition: opacity 0.3s ease-in-out;
             pointer-events: none;
             position: absolute;
-            top:0; 
-            left:0;
+            top: 0; 
+            left: 0;
             width: 100%;
             height: 100vh;
         }
@@ -117,10 +116,16 @@
         /* SETTINGS PAGE */
         .settings-page {
             background: linear-gradient(to bottom, #e3f2fd, #bbdefb);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            position: absolute;
+            top:0; left:0;
+            width:100%;
+            height:100vh;
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            justify-content:center;
+            opacity:0;
+            transition:opacity 0.3s ease-in-out;
         }
 
         .settings-card {
@@ -148,6 +153,7 @@
             flex-direction: column;
             gap: 15px;
             align-items: center;
+            width: 100%;
         }
 
         .control-row {
@@ -209,25 +215,33 @@
 
         /* CHAT INTERFACE */
         .chat-container {
-            position: absolute;
-            top: 0;
-            background: #fff;
-            flex-direction: column;
-            align-items: center;
-            padding-top: 60px; /* space for header */
+            position:absolute;
+            top:0; left:0;
+            width:100%;
+            height:100vh;
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            justify-content:flex-start;
+            background:#fff;
+            overflow-y:auto;
+            opacity:0;
+            transition:opacity 0.3s ease-in-out;
+            box-sizing:border-box;
+            padding-bottom:50px; /* space for content */
         }
 
         .chat-header {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 10px 20px;
-            background: #f5f5f5;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-            z-index: 999;
+            position: sticky;
+            top:0;
+            width:100%;
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            padding:10px 20px;
+            background:#f5f5f5;
+            box-shadow:0px 4px 6px rgba(0,0,0,0.1);
+            z-index:999;
         }
 
         .chat-header h2 {
@@ -236,18 +250,23 @@
             color: #333;
         }
 
-        .chatbox {
+        /* Constrain widths inside chat container */
+        .chat-container > * {
+            max-width: 600px;
             width: 90%;
-            background: #fff;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            overflow-y: auto;
-            padding: 15px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-top: 20px;
-            transition: var(--transition);
+            margin: 0 auto;
+        }
+
+        .chatbox {
+            background:#fff;
+            border-radius:8px;
+            box-shadow:0 0 10px rgba(0,0,0,0.1);
+            overflow-y:auto;
+            padding:15px;
+            display:flex;
+            flex-direction:column;
+            gap:10px;
+            margin-top:20px;
         }
 
         .message {
@@ -283,9 +302,8 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 10px 20px;
             gap: 10px;
-            width: 90%;
+            margin-top:20px;
         }
 
         #userInput {
@@ -325,11 +343,11 @@
         }
 
         .progress {
-            width: 90%;
+            width: 100%;
             background: #eee;
             height: 10px;
             border-radius: 5px;
-            margin: 5px auto;
+            margin: 5px 0;
             overflow: hidden;
             position: relative;
         }
@@ -347,8 +365,8 @@
             background: #f9f9f9;
             border-radius: 10px;
             box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-            margin: 20px auto;
-            width: 90%;
+            margin: 20px 0;
+            width: 100%;
             overflow: hidden;
             transition: max-height 0.3s ease;
             max-height: 0;
@@ -400,14 +418,11 @@
 
         /* Responsive Design */
         @media (max-width: 600px) {
-            .chatbox, .input-container {
-                width: 95%;
-            }
-
             .control-group select {
                 width: 100%;
             }
         }
+
     </style>
 </head>
 <body>
@@ -422,7 +437,6 @@
     </div>
 
     <!-- SETTINGS PAGE -->
-    <!-- Initially hidden using classes, no inline display:none; -->
     <div class="settings-page hidden" id="settingsPage">
         <div class="settings-card">
             <h1>Settings</h1>
@@ -455,10 +469,10 @@
     </div>
 
     <!-- CHAT INTERFACE -->
-    <!-- Initially hidden using classes, no inline display:none; -->
     <div class="chat-container hidden" id="chatContainer">
         <div class="chat-header">
             <h2 id="conversationInfo"></h2>
+            <!-- Add optional controls here if desired -->
         </div>
         <div id="chatbox" class="chatbox"></div>
         <div class="input-container">
