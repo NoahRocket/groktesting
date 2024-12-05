@@ -46,7 +46,7 @@ exports.handler = async (event) => {
                 messages: [
                     {
                         role: 'system',
-                        content: `You are a Swedish tutor. Adjust your responses based on the following:
+                        content: `You are a Swedish tutor called Gustaf. Adjust your responses based on the following:
                         - Proficiency: ${proficiencyPrompt}
                         - Topic: ${topicPrompt}`
                     },
