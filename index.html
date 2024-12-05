@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'EB Garamond', serif;
+            font-family: 'EB+Garamond', serif;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -35,9 +35,9 @@
             }
         }
 
-        /* Static background class (no animation) */
+        /* Static background class (no animation) - lighter blue */
         .static-bg {
-            background: #0056b3; /* Static dark blue */
+            background: #3393d3; /* Lighter blue background */
         }
 
         .hidden {
@@ -90,7 +90,7 @@
         }
 
         .chatbox {
-            height: 60vh;
+            height: calc(60vh - 50px); /* Adjust for header height */
             width: 90%;
             background: white;
             border-radius: 8px;
@@ -100,6 +100,7 @@
             display: flex;
             flex-direction: column;
             gap: 10px;
+            margin-top: 50px; /* space for header bar */
         }
 
         .message {
@@ -129,16 +130,20 @@
 
         #userInput {
             flex: 1;
-            padding: 10px;
-            border-radius: 5px;
+            padding: 10px 20px;
+            border-radius: 30px; /* Rounded input */
             border: 1px solid #ccc;
             font-size: 1rem;
+        }
+
+        #userInput::placeholder {
+            color: #999;
         }
 
         #sendButton {
             padding: 10px 20px;
             border: none;
-            border-radius: 5px;
+            border-radius: 30px;
             background-color: #007bff;
             color: white;
             cursor: pointer;
@@ -154,6 +159,26 @@
             margin-top: 10px;
             font-size: 1rem;
             color: #333;
+            text-align: center;
+        }
+
+        /* Progress bar for messages */
+        .progress {
+            width: 90%;
+            background: #ccc;
+            height: 10px;
+            border-radius: 5px;
+            margin: 0 auto;
+            margin-top: 5px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-bar {
+            width: 100%;
+            background: #007bff;
+            height: 100%;
+            transition: width 0.3s ease;
         }
 
         #correctionsContainer {
@@ -165,6 +190,13 @@
             padding: 15px;
             display: flex;
             flex-direction: column;
+        }
+
+        #correctionsContainer h3 {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 0 0 10px 0;
         }
 
         #correctionsList {
@@ -183,16 +215,16 @@
 
         /* Settings Page */
         #settingsPage {
-            background: #0056b3;
+            background: #fff;
             padding: 40px;
             border-radius: 15px;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            color: #fff;
+            color: #333;
         }
 
         #settingsPage h1 {
             margin-bottom: 30px;
-            color: #fff;
+            color: #333;
         }
 
         .settings-content {
@@ -221,7 +253,7 @@
         .control-group label {
             margin-bottom: 5px;
             font-weight: bold;
-            color: #fff;
+            color: #333;
         }
 
         .icon-label {
@@ -244,6 +276,40 @@
         }
 
         #startChat:hover {
+            background-color: #0056b3;
+        }
+
+        /* Chat Header */
+        .chat-header {
+            position: absolute;
+            top: 0;
+            width: 90%;
+            background: #f1f1f1;
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .chat-header h2 {
+            margin: 0;
+            font-size: 1.2rem;
+            color: #333;
+        }
+
+        /* Toggle Corrections Button */
+        #toggleCorrections {
+            font-size: 0.9rem;
+            padding: 5px 10px;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+
+        #toggleCorrections:hover {
             background-color: #0056b3;
         }
 
@@ -290,14 +356,23 @@
 
     <!-- Chat Interface -->
     <div id="chatContainer" class="hidden">
+        <div class="chat-header">
+            <h2 id="conversationInfo"></h2>
+        </div>
         <div id="chatbox" class="chatbox"></div>
         <div class="input-container">
-            <input type="text" id="userInput" placeholder="Type your message here...">
+            <input type="text" id="userInput" placeholder="Type your response in Swedish…">
             <button id="sendButton">Send</button>
         </div>
-        <p id="sessionLimit">Messages left: 10</p>
+        <p id="sessionLimit">Messages remaining for this session: 10</p>
+        <div class="progress">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
         <div id="correctionsContainer" class="hidden">
-            <h3>Corrections</h3>
+            <h3>
+                Corrections 
+                <button id="toggleCorrections">Toggle Corrections</button>
+            </h3>
             <ul id="correctionsList"></ul>
         </div>
     </div>
@@ -312,10 +387,16 @@
         const chatbox = document.getElementById('chatbox');
         const userInputField = document.getElementById('userInput');
         const sendButton = document.getElementById('sendButton');
+        const conversationInfo = document.getElementById('conversationInfo');
+        const progressBar = document.getElementById('progressBar');
+        const correctionsContainer = document.getElementById('correctionsContainer');
+        const correctionsList = document.getElementById('correctionsList');
+        const toggleCorrectionsButton = document.getElementById('toggleCorrections');
 
         let messageLimit = 10;
         let selectedProficiency = '';
         let selectedTopic = '';
+        let correctionsVisible = true; // for toggling
 
         startButton.addEventListener('click', () => {
             // Hide landing and show settings
@@ -332,11 +413,16 @@
             selectedTopic = document.getElementById('topics').value;
             settingsPage.classList.add('hidden');
             chatContainer.classList.remove('hidden');
+
+            // Update conversation info
+            conversationInfo.innerText = `Topic: ${selectedTopic.charAt(0).toUpperCase() + selectedTopic.slice(1)} | Level: ${selectedProficiency.charAt(0).toUpperCase() + selectedProficiency.slice(1)}`;
         });
 
         function decrementSessionLimit() {
             messageLimit--;
-            sessionLimitText.innerText = `Messages left: ${messageLimit}`;
+            sessionLimitText.innerText = `Messages remaining for this session: ${messageLimit}`;
+            const percentage = (messageLimit / 10) * 100;
+            progressBar.style.width = `${percentage}%`;
             if (messageLimit <= 0) {
                 alert('Session limit reached! Please start a new session.');
             }
@@ -351,16 +437,21 @@
         }
 
         function displayCorrections(corrections) {
-            const correctionsContainer = document.getElementById('correctionsContainer');
-            const correctionsList = document.getElementById('correctionsList');
             correctionsContainer.classList.remove('hidden');
             correctionsList.innerHTML = '';
             corrections.forEach((correction) => {
                 const listItem = document.createElement('li');
-                listItem.textContent = `Word: ${correction.word}, Suggestion: ${correction.suggestion}`;
+                // Highlight word in red and suggestion in green
+                listItem.innerHTML = `<span style="color:red;">Word:</span> <span style="color:red;">${correction.word}</span>, 
+                                      <span style="color:green;">Suggestion:</span> <span style="color:green;">${correction.suggestion}</span>`;
                 correctionsList.appendChild(listItem);
             });
         }
+
+        toggleCorrectionsButton.addEventListener('click', () => {
+            correctionsVisible = !correctionsVisible;
+            correctionsList.style.display = correctionsVisible ? 'block' : 'none';
+        });
 
         async function sendMessage() {
             const userInput = userInputField.value.trim();
@@ -388,7 +479,9 @@
                 const data = await response.json();
                 typingIndicator.remove();
                 addMessage(data.choices[0]?.message.content || 'No response', false);
-                displayCorrections(data.corrections || []);
+                if (data.corrections && data.corrections.length > 0) {
+                    displayCorrections(data.corrections);
+                }
             } catch (error) {
                 console.error('Error:', error);
                 typingIndicator.remove();
