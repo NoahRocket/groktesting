@@ -3,243 +3,145 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Learn Swedish</title>
-    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;700&display=swap" rel="stylesheet">
+    <title>Gustaf</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --base-font-size: 16px;
+            --primary-color: #007bff;
+            --primary-hover: #0056b3;
+            --light-bg: #f5f5f5;
+            --transition: all 0.3s ease;
+            --progress-bar-color: #90caf9; /* Light blue for progress bar */
+        }
+
+        html {
+            font-size: var(--base-font-size);
+        }
+
         body {
-            font-family: 'EB+Garamond', serif;
+            font-family: 'Inter', 'SF Pro', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Shared Button Styles */
+        button {
+            font-size: 1rem;
+            padding: 10px 20px;
+            background-color: var(--primary-color);
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        button:hover {
+            background-color: var(--primary-hover);
+            transform: scale(1.05);
+            box-shadow: 0px 4px 6px rgba(0,0,0,0.1);
+        }
+
+        /* LANDING PAGE (WELCOME TO GUSTAF) */
+        .landing-page {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 100vh;
-            margin: 0;
-        }
-
-        /* Animated background class */
-        .animated-bg {
+            text-align: center;
             background: linear-gradient(120deg, #F7E400, #0056b3);
             background-size: 400% 400%;
-            animation: gradientBG 10s ease infinite;
+            animation: gradientBG 15s ease infinite;
         }
 
         @keyframes gradientBG {
-            0% {
-                background-position: 0% 50%;
-            }
-            50% {
-                background-position: 100% 50%;
-            }
-            100% {
-                background-position: 0% 50%;
-            }
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
-        /* Static background class (no animation) - lighter blue */
-        .static-bg {
-            background: #3393d3; /* Lighter blue background */
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        h1, h3 {
+        .landing-page h1 {
             color: #333;
-            text-align: center;
+            font-size: 2rem;
+            margin: 0;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2); /* subtle drop shadow */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
 
-        /* Landing Page Enhancements */
-        #startButton {
-            padding: 15px 30px;
-            margin: 20px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 30px;
-            cursor: pointer;
-            font-size: 1.2rem;
-            transition: all 0.3s ease;
+        .landing-page h1 .icon {
+            display: inline-block;
+            font-size: 1.5rem;
+            animation: iconBounce 2s infinite ease-in-out;
         }
 
-        #startButton:hover {
-            background-color: #0056b3;
+        @keyframes iconBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .start-button {
+            margin-top: 20px;
+            background-color: var(--primary-color);
+            border-radius: 12px;
+            transition: var(--transition);
+        }
+
+        .start-button:hover {
+            transform: scale(1.05);
+            background-color: var(--primary-hover);
             box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
 
-        /* Generic button styling */
-        button {
-            padding: 10px 20px;
-            margin: 10px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background-color: #0056b3;
-        }
-
-        select {
-            padding: 10px;
-            border-radius: 5px;
-            font-size: 1rem;
-            border: 1px solid #ccc;
-        }
-
-        .chatbox {
-            height: calc(60vh - 50px); /* Adjust for header height */
-            width: 90%;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            overflow-y: auto;
-            padding: 15px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-top: 50px; /* space for header bar */
-        }
-
-        .message {
-            max-width: 80%;
-            padding: 10px 15px;
-            border-radius: 5px;
-            word-wrap: break-word;
-        }
-
-        .message.user {
-            background-color: #007bff;
-            color: white;
-            margin-left: auto;
-        }
-
-        .message.bot {
-            background-color: #f1f0f0;
-            color: #333;
-            margin-right: auto;
-        }
-
-        .input-container {
-            display: flex;
-            width: 90%;
-            margin-top: 10px;
-        }
-
-        #userInput {
-            flex: 1;
-            padding: 10px 20px;
-            border-radius: 30px; /* Rounded input */
-            border: 1px solid #ccc;
-            font-size: 1rem;
-        }
-
-        #userInput::placeholder {
-            color: #999;
-        }
-
-        #sendButton {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 30px;
-            background-color: #007bff;
-            color: white;
-            cursor: pointer;
-            font-size: 1rem;
-            margin-left: 10px;
-        }
-
-        #sendButton:hover {
-            background-color: #0056b3;
-        }
-
-        #sessionLimit {
-            margin-top: 10px;
-            font-size: 1rem;
-            color: #333;
-            text-align: center;
-        }
-
-        /* Progress bar for messages */
-        .progress {
-            width: 90%;
-            background: #ccc;
-            height: 10px;
-            border-radius: 5px;
-            margin: 0 auto;
-            margin-top: 5px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .progress-bar {
+        /* SETTINGS PAGE */
+        .settings-page {
             width: 100%;
-            background: #007bff;
-            height: 100%;
-            transition: width 0.3s ease;
-        }
-
-        #correctionsContainer {
-            width: 90%;
-            background: #f9f9f9;
-            border-radius: 8px;
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-            margin-top: 10px;
-            padding: 15px;
+            height: 100vh;
+            background: linear-gradient(to bottom, #e3f2fd, #bbdefb);
             display: flex;
-            flex-direction: column;
+            align-items: center; /* center vertically */
+            justify-content: center; /* center horizontally */
         }
 
-        #correctionsContainer h3 {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin: 0 0 10px 0;
-        }
-
-        #correctionsList {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        #correctionsList li {
-            margin-bottom: 5px;
-            padding: 5px 10px;
-            border-radius: 5px;
-            background: #fff;
-            box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Settings Page */
-        #settingsPage {
+        .settings-card {
             background: #fff;
             padding: 40px;
             border-radius: 15px;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
             color: #333;
-        }
-
-        #settingsPage h1 {
-            margin-bottom: 30px;
-            color: #333;
-        }
-
-        .settings-content {
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 20px;
+            width: 300px;
+            transition: var(--transition);
+        }
+
+        .settings-card h1 {
+            margin-bottom: 30px;
+            font-size: 1.5rem;
+            text-align: center;
         }
 
         .inline-controls {
             display: flex;
-            flex-wrap: wrap;
+            flex-direction: column;
             gap: 20px;
             align-items: center;
-            justify-content: center;
+        }
+
+        /* Align dropdowns and icons in a row */
+        .control-row {
+            display: flex;
+            align-items: center;
+            gap: 20px;
         }
 
         .control-group {
@@ -264,32 +166,52 @@
 
         .control-group select {
             min-width: 150px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            transition: var(--transition);
         }
 
+        .control-group select:hover {
+            box-shadow: 0px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        /* Let's Talk button styling */
         #startChat {
             padding: 12px 25px;
             font-size: 1.1rem;
             border-radius: 30px;
-            background-color: #007bff;
-            color: #fff;
-            transition: background-color 0.3s;
+            box-shadow: 0px 4px 6px rgba(0,0,0,0.1);
         }
 
         #startChat:hover {
-            background-color: #0056b3;
+            transform: scale(1.05);
         }
 
-        /* Chat Header */
-        .chat-header {
-            position: absolute;
-            top: 0;
-            width: 90%;
-            background: #f1f1f1;
-            padding: 10px;
-            border-bottom: 1px solid #ccc;
+        /* Optional enhancement: tooltips via title attributes on label */
+        /* If you'd like custom tooltips, you can implement a more complex solution */
+
+        /* CHAT INTERFACE */
+        .chat-container {
+            position: relative;
+            width: 100%;
+            min-height: 100vh;
+            background: #fff;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
+            padding-top: 60px; /* space for header */
+        }
+
+        .chat-header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: #f5f5f5;
+            border-bottom: 1px solid #ddd;
+            padding: 10px 0;
+            text-align: center;
+            z-index: 999;
         }
 
         .chat-header h2 {
@@ -298,66 +220,211 @@
             color: #333;
         }
 
-        /* Toggle Corrections Button */
+        .chatbox {
+            width: 90%;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+            transition: var(--transition);
+        }
+
+        /* Message Fade-in Animation */
+        .message {
+            max-width: 80%;
+            padding: 10px 15px;
+            border-radius: 5px;
+            word-wrap: break-word;
+            opacity: 0;
+            transform: translateY(10px);
+            animation: messageFadeIn 0.3s forwards;
+        }
+
+        @keyframes messageFadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.user {
+            background-color: var(--primary-color);
+            color: white;
+            margin-left: auto;
+        }
+
+        .message.bot {
+            background-color: #f1f0f0;
+            color: #333;
+            margin-right: auto;
+        }
+
+        .input-container {
+            display: flex;
+            width: 90%;
+            margin-top: 20px;
+        }
+
+        #userInput {
+            flex: 1;
+            padding: 10px 20px;
+            border-radius: 30px; 
+            border: 1px solid #ccc;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        #userInput::placeholder {
+            color: #999;
+        }
+
+        #sendButton {
+            padding: 10px 20px;
+            border-radius: 30px;
+            margin-left: 10px;
+            font-size: 1rem;
+        }
+
+        /* Center messages remaining and progress bar */
+        #sessionLimit {
+            margin-top: 10px;
+            font-size: 1rem;
+            color: #333;
+            text-align: center;
+        }
+
+        .progress {
+            width: 90%;
+            background: #eee;
+            height: 10px;
+            border-radius: 5px;
+            margin: 5px auto;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-bar {
+            width: 100%;
+            background: var(--progress-bar-color);
+            height: 100%;
+            transition: width 0.3s ease-in-out;
+        }
+
+        #correctionsContainer {
+            width: 90%;
+            background: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            margin-top: 10px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transition: max-height 0.3s ease; /* Smooth expand/collapse */
+            max-height: 0; /* Start collapsed */
+        }
+
+        #correctionsContainer.visible {
+            max-height: 300px; /* Enough space for a few corrections */
+        }
+
+        #correctionsContainer h3 {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 0 10px 0;
+            font-size: 1.1rem;
+            position: relative;
+        }
+
         #toggleCorrections {
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            margin: auto 10px;
             font-size: 0.9rem;
             padding: 5px 10px;
             border-radius: 5px;
-            background-color: #007bff;
-            color: #fff;
-            border: none;
-            cursor: pointer;
         }
 
-        #toggleCorrections:hover {
-            background-color: #0056b3;
+        #correctionsList {
+            list-style: none;
+            padding: 0;
+            margin: 0;
         }
 
+        #correctionsList li {
+            margin-bottom: 5px;
+            padding: 5px 10px;
+            border-radius: 5px;
+            background: #fff;
+            box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            .settings-card {
+                width: 90%;
+            }
+            .chatbox, .input-container {
+                width: 95%;
+            }
+        }
     </style>
 </head>
-<body class="animated-bg">
-    <!-- Landing Page -->
-    <div id="landingPage">
-        <h1>Welcome to Learn Swedish!</h1>
-        <h3>Master Swedish with bite-sized conversations tailored just for you.</h3>
-        <button id="startButton">Start Practicing</button>
+<body>
+    <!-- LANDING PAGE -->
+    <div class="landing-page" id="landingPage">
+        <h1>
+            Welcome to Gustaf!
+            <span class="icon">🇸🇪</span>
+        </h1>
+        <button class="start-button" id="startButton">Start Practicing</button>
     </div>
 
-    <!-- Settings Page -->
-    <div id="settingsPage" class="hidden">
-        <h1>Settings</h1>
-        <div class="settings-content">
+    <!-- SETTINGS PAGE -->
+    <div class="settings-page hidden" id="settingsPage">
+        <div class="settings-card">
+            <h1>Settings</h1>
             <div class="inline-controls">
-                <div class="control-group">
-                    <label for="proficiency" class="icon-label">
-                        ⭐ Level
-                    </label>
-                    <select id="proficiency">
-                        <option value="beginner">Beginner</option>
-                        <option value="intermediate">Intermediate</option>
-                        <option value="advanced">Advanced</option>
-                    </select>
-                </div>
-                
-                <div class="control-group">
-                    <label for="topics" class="icon-label">
-                        💬 Topic
-                    </label>
-                    <select id="topics">
-                        <option value="greetings">Greetings</option>
-                        <option value="ordering-food">Ordering Food</option>
-                        <option value="travel-phrases">Travel Phrases</option>
-                    </select>
+                <div class="control-row">
+                    <div class="control-group" title="Select your current Swedish proficiency level">
+                        <label for="proficiency" class="icon-label">
+                            ⭐ Level
+                        </label>
+                        <select id="proficiency">
+                            <option value="beginner">Beginner</option>
+                            <option value="intermediate">Intermediate</option>
+                            <option value="advanced">Advanced</option>
+                        </select>
+                    </div>
+                    <div class="control-group" title="Choose a topic for the conversation">
+                        <label for="topics" class="icon-label">
+                            💬 Topic
+                        </label>
+                        <select id="topics">
+                            <option value="greetings">Greetings</option>
+                            <option value="ordering-food">Ordering Food</option>
+                            <option value="travel-phrases">Travel Phrases</option>
+                        </select>
+                    </div>
                 </div>
             </div>
             <button id="startChat">Let’s Talk</button>
         </div>
     </div>
 
-    <!-- Chat Interface -->
-    <div id="chatContainer" class="hidden">
+    <!-- CHAT INTERFACE -->
+    <div class="chat-container hidden" id="chatContainer">
         <div class="chat-header">
             <h2 id="conversationInfo"></h2>
+            <!-- Optional: Add a restart icon or clear chat here -->
         </div>
         <div id="chatbox" class="chatbox"></div>
         <div class="input-container">
@@ -368,11 +435,9 @@
         <div class="progress">
             <div class="progress-bar" id="progressBar"></div>
         </div>
-        <div id="correctionsContainer" class="hidden">
-            <h3>
-                Corrections 
-                <button id="toggleCorrections">Toggle Corrections</button>
-            </h3>
+        <div id="correctionsContainer">
+            <h3>Corrections</h3>
+            <button id="toggleCorrections">Toggle Corrections</button>
             <ul id="correctionsList"></ul>
         </div>
     </div>
@@ -396,18 +461,15 @@
         let messageLimit = 10;
         let selectedProficiency = '';
         let selectedTopic = '';
-        let correctionsVisible = true; // for toggling
+        let correctionsVisible = false;
 
+        // Navigate from Landing to Settings
         startButton.addEventListener('click', () => {
-            // Hide landing and show settings
             landingPage.classList.add('hidden');
             settingsPage.classList.remove('hidden');
-            
-            // Stop animation by removing animated-bg class and adding static-bg
-            document.body.classList.remove('animated-bg');
-            document.body.classList.add('static-bg');
         });
 
+        // Navigate from Settings to Chat
         startChatButton.addEventListener('click', () => {
             selectedProficiency = document.getElementById('proficiency').value;
             selectedTopic = document.getElementById('topics').value;
@@ -415,8 +477,12 @@
             chatContainer.classList.remove('hidden');
 
             // Update conversation info
-            conversationInfo.innerText = `Topic: ${selectedTopic.charAt(0).toUpperCase() + selectedTopic.slice(1)} | Level: ${selectedProficiency.charAt(0).toUpperCase() + selectedProficiency.slice(1)}`;
+            conversationInfo.innerText = `Topic: ${capitalize(selectedTopic)} | Level: ${capitalize(selectedProficiency)}`;
         });
+
+        function capitalize(str) {
+            return str.charAt(0).toUpperCase() + str.slice(1);
+        }
 
         function decrementSessionLimit() {
             messageLimit--;
@@ -437,11 +503,11 @@
         }
 
         function displayCorrections(corrections) {
-            correctionsContainer.classList.remove('hidden');
+            correctionsVisible = true;
+            correctionsContainer.classList.add('visible');
             correctionsList.innerHTML = '';
             corrections.forEach((correction) => {
                 const listItem = document.createElement('li');
-                // Highlight word in red and suggestion in green
                 listItem.innerHTML = `<span style="color:red;">Word:</span> <span style="color:red;">${correction.word}</span>, 
                                       <span style="color:green;">Suggestion:</span> <span style="color:green;">${correction.suggestion}</span>`;
                 correctionsList.appendChild(listItem);
@@ -450,7 +516,11 @@
 
         toggleCorrectionsButton.addEventListener('click', () => {
             correctionsVisible = !correctionsVisible;
-            correctionsList.style.display = correctionsVisible ? 'block' : 'none';
+            if (correctionsVisible) {
+                correctionsContainer.classList.add('visible');
+            } else {
+                correctionsContainer.classList.remove('visible');
+            }
         });
 
         async function sendMessage() {
@@ -466,6 +536,7 @@
             chatbox.appendChild(typingIndicator);
 
             try {
+                // Replace this fetch with your actual endpoint
                 const response = await fetch('/.netlify/functions/xaiProxy', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
