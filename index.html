@@ -23,14 +23,18 @@
             font-family: 'Inter', 'SF Pro', Arial, sans-serif;
             margin: 0;
             padding: 0;
+            overflow: hidden;
+            position: relative;
         }
 
-        /* Generic Classes for Transitions */
+        /* Page Transition Classes */
         .hidden {
             opacity: 0;
             transition: opacity 0.3s ease-in-out;
             pointer-events: none;
             position: absolute;
+            top:0; 
+            left:0;
             width: 100%;
             height: 100vh;
         }
@@ -42,7 +46,8 @@
 
         /* LANDING PAGE */
         .landing-page {
-            position: relative;
+            position: absolute;
+            top:0; left:0;
             width: 100%;
             height: 100vh;
             overflow: hidden;
@@ -111,18 +116,11 @@
 
         /* SETTINGS PAGE */
         .settings-page {
-            display: none;
-            opacity: 0;
-            width: 100%;
-            height: 100vh;
             background: linear-gradient(to bottom, #e3f2fd, #bbdefb);
+            display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            transition: opacity 0.3s ease-in-out;
-            position: absolute;
-            top: 0;
-            left: 0;
         }
 
         .settings-card {
@@ -211,17 +209,12 @@
 
         /* CHAT INTERFACE */
         .chat-container {
-            display: none;
-            opacity: 0;
             position: absolute;
             top: 0;
-            width: 100%;
-            min-height: 100vh;
             background: #fff;
             flex-direction: column;
             align-items: center;
             padding-top: 60px; /* space for header */
-            transition: opacity 0.3s ease-in-out;
         }
 
         .chat-header {
@@ -429,6 +422,7 @@
     </div>
 
     <!-- SETTINGS PAGE -->
+    <!-- Initially hidden using classes, no inline display:none; -->
     <div class="settings-page hidden" id="settingsPage">
         <div class="settings-card">
             <h1>Settings</h1>
@@ -461,10 +455,10 @@
     </div>
 
     <!-- CHAT INTERFACE -->
+    <!-- Initially hidden using classes, no inline display:none; -->
     <div class="chat-container hidden" id="chatContainer">
         <div class="chat-header">
             <h2 id="conversationInfo"></h2>
-            <!-- Optional: Add a restart or clear chat icon here if desired -->
         </div>
         <div id="chatbox" class="chatbox"></div>
         <div class="input-container">
@@ -503,7 +497,6 @@
         let selectedTopic = '';
         let correctionsVisible = false;
 
-        // Function to handle page transitions
         function switchPage(fromPage, toPage) {
             fromPage.classList.add('hidden');
             fromPage.classList.remove('visible');
@@ -517,7 +510,7 @@
             }, 300);
         }
 
-        // Navigate from Landing to Settings using switchPage
+        // Navigate from Landing to Settings
         startButton.addEventListener('click', () => {
             switchPage(landingPage, settingsPage);
         });
@@ -527,7 +520,6 @@
             selectedProficiency = document.getElementById('proficiency').value;
             selectedTopic = document.getElementById('topics').value;
             switchPage(settingsPage, chatContainer);
-            // Update conversation info
             conversationInfo.innerText = `Topic: ${capitalize(selectedTopic)} | Level: ${capitalize(selectedProficiency)}`;
         });
 
