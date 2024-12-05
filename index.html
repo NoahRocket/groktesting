@@ -12,7 +12,7 @@
             --primary-hover: #0056b3;
             --light-bg: #f5f5f5;
             --transition: all 0.3s ease;
-            --progress-bar-color: #90caf9;
+            --progress-bar-color: #90caf9; /* Light blue for progress bar */
         }
 
         html {
@@ -24,7 +24,6 @@
             margin: 0;
             padding: 0;
             position: relative;
-            /* Remove overflow:hidden if causing issues */
         }
 
         /* Page states */
@@ -34,7 +33,7 @@
             left: 0;
             width: 100%;
             height: 100vh;
-            transition: opacity 0.3s ease-in-out; /* Define transition here */
+            transition: opacity 0.3s ease-in-out;
         }
 
         .hidden {
@@ -147,10 +146,11 @@
             width: 100%;
         }
 
+        /* Center the control-row content */
         .control-row {
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            justify-content: center;
             gap: 20px;
             width: 100%;
         }
@@ -174,8 +174,9 @@
             gap: 5px;
         }
 
+        /* Reduce select width for better fit */
         .control-group select {
-            width: 200px;
+            width: 150px;
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
@@ -212,7 +213,7 @@
             background:#fff;
             overflow-y:auto;
             box-sizing:border-box;
-            padding-top:80px;
+            padding-top:80px; /* Space for header */
             padding-bottom:50px;
         }
 
@@ -220,13 +221,11 @@
             position: sticky;
             top:0;
             width:100%;
-            display:flex;
-            align-items:center;
-            justify-content:center;
             padding:10px 20px;
             background:#f5f5f5;
             box-shadow:0px 4px 6px rgba(0,0,0,0.1);
             z-index:999;
+            text-align:center;
         }
 
         .chat-header h2 {
@@ -290,6 +289,7 @@
             margin-top:0;
         }
 
+        /* Shorten placeholder text to avoid pushing the layout */
         #userInput {
             flex: 1;
             padding: 10px 15px;
@@ -344,8 +344,6 @@
         }
 
         #correctionsContainer {
-            position: relative;
-            padding: 15px;
             background: #f9f9f9;
             border-radius: 10px;
             box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
@@ -354,6 +352,7 @@
             transition: max-height 0.3s ease;
             max-height: 0;
             margin-bottom:20px;
+            padding:15px;
         }
 
         #correctionsContainer.visible {
@@ -403,6 +402,10 @@
         @media (max-width: 600px) {
             .control-group select {
                 width: 100%;
+            }
+            .control-row {
+                flex-direction: column;
+                gap: 10px;
             }
         }
     </style>
@@ -454,7 +457,8 @@
         </div>
         <div id="chatbox" class="chatbox"></div>
         <div class="input-container">
-            <input type="text" id="userInput" placeholder="Type your response in Swedish…">
+            <!-- Shortened placeholder text for better spacing -->
+            <input type="text" id="userInput" placeholder="Type in Swedish…">
             <button id="sendButton">Send</button>
         </div>
         <p id="sessionLimit">Messages remaining for this session: 10</p>
@@ -568,6 +572,7 @@
             chatbox.appendChild(typingIndicator);
 
             try {
+                // Replace with your endpoint
                 const response = await fetch('/.netlify/functions/xaiProxy', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
