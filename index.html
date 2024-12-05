@@ -41,7 +41,7 @@
             text-align: center;
         }
 
-        /* Enhancing the start button */
+        /* Landing Page Enhancements */
         #startButton {
             padding: 15px 30px;
             margin: 20px;
@@ -59,7 +59,7 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
 
-        /* Generic buttons */
+        /* Generic button styling */
         button {
             padding: 10px 20px;
             margin: 10px;
@@ -76,9 +76,9 @@
 
         select {
             padding: 10px;
-            margin: 10px;
             border-radius: 5px;
             font-size: 1rem;
+            border: 1px solid #ccc;
         }
 
         .chatbox {
@@ -175,12 +175,79 @@
             background: #fff;
             box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
         }
+
+        /* Settings Page */
+        #settingsPage {
+            background: #0056b3;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            color: #fff;
+        }
+
+        #settingsPage h1 {
+            margin-bottom: 30px;
+            color: #fff;
+        }
+
+        .settings-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .inline-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            font-size: 1rem;
+            position: relative;
+        }
+
+        .control-group label {
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .icon-label {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .control-group select {
+            min-width: 150px;
+        }
+
+        #startChat {
+            padding: 12px 25px;
+            font-size: 1.1rem;
+            border-radius: 30px;
+            background-color: #007bff;
+            color: #fff;
+            transition: background-color 0.3s;
+        }
+
+        #startChat:hover {
+            background-color: #0056b3;
+        }
+
     </style>
 </head>
 <body>
     <!-- Landing Page -->
     <div id="landingPage">
-        <h1>Welcome to Learn Swedish!</h1>
+        <h1>Welcome to Gustaf!</h1>
         <h3>Master Swedish with bite-sized conversations tailored just for you.</h3>
         <button id="startButton">Start Practicing</button>
     </div>
@@ -188,19 +255,32 @@
     <!-- Settings Page -->
     <div id="settingsPage" class="hidden">
         <h1>Settings</h1>
-        <label for="proficiency">Choose your level:</label>
-        <select id="proficiency">
-            <option value="beginner">Beginner</option>
-            <option value="intermediate">Intermediate</option>
-            <option value="advanced">Advanced</option>
-        </select>
-        <label for="topics">Choose a topic:</label>
-        <select id="topics">
-            <option value="greetings">Greetings</option>
-            <option value="ordering-food">Ordering Food</option>
-            <option value="travel-phrases">Travel Phrases</option>
-        </select>
-        <button id="startChat">Start Chat</button>
+        <div class="settings-content">
+            <div class="inline-controls">
+                <div class="control-group">
+                    <label for="proficiency" class="icon-label">
+                        ⭐ Level
+                    </label>
+                    <select id="proficiency">
+                        <option value="beginner">Beginner</option>
+                        <option value="intermediate">Intermediate</option>
+                        <option value="advanced">Advanced</option>
+                    </select>
+                </div>
+                
+                <div class="control-group">
+                    <label for="topics" class="icon-label">
+                        💬 Topic
+                    </label>
+                    <select id="topics">
+                        <option value="greetings">Greetings</option>
+                        <option value="ordering-food">Ordering Food</option>
+                        <option value="travel-phrases">Travel Phrases</option>
+                    </select>
+                </div>
+            </div>
+            <button id="startChat">Let’s Talk</button>
+        </div>
     </div>
 
     <!-- Chat Interface -->
