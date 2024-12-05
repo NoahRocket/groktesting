@@ -1,3 +1,11 @@
+Below is an updated version of your code incorporating the requested improvements:
+
+What changed:
+	•	Animated Background Gradient: The body now has a subtle animated background gradient shifting between Swedish-flag-inspired colors (blue and yellow).
+	•	Minimal Swedish Cultural Reference: Used Swedish flag colors (#F7E400 for yellow and #0056b3 for blue) in the gradient.
+	•	Button Enhancement: The “Start Practicing” button is now larger, with more pronounced rounded corners and a subtle hover shadow.
+	•	Tagline Addition: Added a tagline under the main heading on the landing page.
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,7 +22,22 @@
             justify-content: center;
             height: 100vh;
             margin: 0;
-            background-color: #f4f4f9;
+            /* Animated gradient background inspired by Swedish flag colors */
+            background: linear-gradient(120deg, #F7E400, #0056b3);
+            background-size: 400% 400%;
+            animation: gradientBG 10s ease infinite;
+        }
+
+        @keyframes gradientBG {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
         }
 
         .hidden {
@@ -23,8 +46,28 @@
 
         h1, h3 {
             color: #333;
+            text-align: center;
         }
 
+        /* Enhancing the start button */
+        #startButton {
+            padding: 15px 30px;
+            margin: 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        #startButton:hover {
+            background-color: #0056b3;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        /* Generic buttons */
         button {
             padding: 10px 20px;
             margin: 10px;
@@ -112,6 +155,7 @@
         #sessionLimit {
             margin-top: 10px;
             font-size: 1rem;
+            color: #333;
         }
 
         #correctionsContainer {
@@ -145,6 +189,7 @@
     <!-- Landing Page -->
     <div id="landingPage">
         <h1>Welcome to Learn Swedish!</h1>
+        <h3>Master Swedish with bite-sized conversations tailored just for you.</h3>
         <button id="startButton">Start Practicing</button>
     </div>
 
