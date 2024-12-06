@@ -75,7 +75,7 @@
             align-items: center;
             justify-content: center;
             gap: 10px;
-            padding: 0 10px; /* Prevent overflow */
+            padding: 0 10px; /* Added padding to prevent overflow */
         }
 
         .landing-page h1 .icon {
@@ -93,7 +93,7 @@
             font-size: 1rem;
             color: #555;
             font-weight: 400;
-            padding: 0 10px; /* Prevent overflow */
+            padding: 0 10px; /* Added padding to prevent overflow */
         }
 
         .start-button {
@@ -121,8 +121,8 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 10px; /* Padding for mobile spacing */
-            box-sizing: border-box; /* Include padding in width calculations */
+            padding: 10px; /* Added padding for better spacing on mobile */
+            box-sizing: border-box; /* Ensure padding is included in width calculations */
         }
 
         .settings-card {
@@ -135,8 +135,8 @@
             flex-direction: column;
             align-items: center;
             gap: 20px;
-            width: 400px; /* Increased width to fix alignment */
-            box-sizing: border-box; /* Include padding in width calculations */
+            width: 400px;
+            box-sizing: border-box; /* Ensure padding is included in width calculations */
         }
 
         .settings-card h1 {
@@ -167,7 +167,7 @@
             flex-direction: column;
             align-items: flex-start;
             font-size: 1rem;
-            width: 100%; /* Full width on mobile */
+            width: 100%; /* Ensure full width on mobile */
         }
 
         .control-group label {
@@ -182,14 +182,14 @@
             gap: 5px;
         }
 
-        /* Adjust select width for better fit */
+        /* Reduce select width for better fit */
         .control-group select {
             width: 150px;
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
             transition: var(--transition);
-            box-sizing: border-box; /* Include padding in width calculations */
+            box-sizing: border-box; /* Ensure padding is included in width calculations */
         }
 
         .control-group select:hover {
@@ -217,19 +217,19 @@
         .chat-container {
             display: flex;
             flex-direction: column;
-            height: 100vh; /* Full viewport height */
+            height: 100vh; /* Ensure it takes full viewport height */
             background: #fff;
-            overflow: hidden; /* Prevent container scrolling */
+            overflow: hidden; /* Prevent scrolling of the container */
         }
 
         .chat-header {
-            flex: 0 0 auto; /* Prevent growing/shrinking */
+            flex: 0 0 auto; /* Prevent it from growing/shrinking */
             padding: 10px 20px;
             background: #f5f5f5;
             box-shadow: 0px 4px 6px rgba(0,0,0,0.1);
             z-index: 999;
             text-align: center;
-            box-sizing: border-box; /* Include padding in width calculations */
+            box-sizing: border-box; /* Ensure padding is included in width calculations */
         }
 
         .chat-header h2 {
@@ -241,7 +241,7 @@
         }
 
         .chatbox {
-            flex: 1 1 auto; /* Grow to fill available space */
+            flex: 1 1 auto; /* Allow it to grow and fill available space */
             background: #fff;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
@@ -250,10 +250,10 @@
             display: flex;
             flex-direction: column;
             gap: 10px;
-            margin: 20px auto; /* Center chatbox */
+            margin: 20px auto; /* Center the chatbox */
             width: 90%;
             max-width: 600px;
-            box-sizing: border-box; /* Include padding in width calculations */
+            box-sizing: border-box; /* Ensure padding is included in width calculations */
         }
 
         .message {
@@ -286,7 +286,7 @@
         }
 
         .input-container {
-            flex: 0 0 auto; /* Prevent growing/shrinking */
+            flex: 0 0 auto; /* Prevent it from growing/shrinking */
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -295,7 +295,7 @@
             width: 90%;
             max-width: 600px;
             margin: 0 auto 20px; /* Center and add bottom margin */
-            box-sizing: border-box; /* Include padding in width calculations */
+            box-sizing: border-box; /* Ensure padding is included in width calculations */
         }
 
         /* Shortened placeholder text to avoid pushing the layout */
@@ -306,7 +306,7 @@
             border: 1px solid #ccc;
             font-size: 1rem;
             transition: var(--transition);
-            box-sizing: border-box; /* Include padding in width calculations */
+            box-sizing: border-box; /* Ensure padding is included in width calculations */
         }
 
         #userInput::placeholder {
@@ -322,7 +322,7 @@
             border: none;
             cursor: pointer;
             transition: var(--transition);
-            box-sizing: border-box; /* Include padding in width calculations */
+            box-sizing: border-box; /* Ensure padding is included in width calculations */
         }
 
         #sendButton:hover {
@@ -331,18 +331,18 @@
         }
 
         #sessionLimit {
-            flex: 0 0 auto; /* Prevent growing/shrinking */
+            flex: 0 0 auto; /* Prevent it from growing/shrinking */
             font-size: 1rem;
             color: #333;
             text-align: center;
             margin: 0 auto 10px auto; /* Center and add bottom margin */
             width: 90%;
             max-width: 600px;
-            box-sizing: border-box; /* Include padding in width calculations */
+            box-sizing: border-box; /* Ensure padding is included in width calculations */
         }
 
         .progress {
-            flex: 0 0 auto; /* Prevent growing/shrinking */
+            flex: 0 0 auto; /* Prevent it from growing/shrinking */
             width: 90%;
             max-width: 600px;
             background: #eee;
@@ -351,7 +351,7 @@
             overflow: hidden;
             position: relative;
             margin: 0 auto 20px auto; /* Center and add bottom margin */
-            box-sizing: border-box; /* Include padding in width calculations */
+            box-sizing: border-box; /* Ensure padding is included in width calculations */
         }
 
         .progress-bar {
@@ -362,7 +362,7 @@
         }
 
         #correctionsContainer {
-            flex: 0 0 auto; /* Prevent growing/shrinking */
+            flex: 0 0 auto; /* Prevent it from growing/shrinking */
             background: #f9f9f9;
             border-radius: 10px;
             box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
@@ -373,7 +373,7 @@
             max-height: 0;
             margin: 0 auto;
             padding: 0 15px;
-            box-sizing: border-box; /* Include padding in width calculations */
+            box-sizing: border-box; /* Ensure padding is included in width calculations */
         }
 
         #correctionsContainer.visible {
@@ -399,7 +399,7 @@
             cursor: pointer;
             transition: var(--transition);
             margin: 0;
-            box-sizing: border-box; /* Include padding in width calculations */
+            box-sizing: border-box; /* Ensure padding is included in width calculations */
         }
 
         #toggleCorrections:hover {
@@ -476,6 +476,17 @@
                 display: none;
             }
 
+            /* Alternatively, if you want to allow toggling visibility on mobile, you can use:
+            #correctionsContainer {
+                max-height: 0;
+                padding: 0 15px;
+            }
+            #correctionsContainer.visible {
+                max-height: 300px;
+                padding: 15px;
+            }
+            */
+
             /* Ensure progress bar fits within mobile view */
             .progress {
                 width: 100%;
@@ -487,19 +498,10 @@
                 width: 100%;
                 font-size: 0.9rem;
             }
-
-            /* Adjust token usage text */
-            #tokenUsage {
-                width: 100%;
-                font-size: 0.9rem;
-                text-align: center;
-                margin: 0 0 10px 0;
-            }
         }
     </style>
 </head>
 <body>
-    <!-- Landing Page -->
     <div class="landing-page page visible" id="landingPage">
         <h1>
             Welcome to Gustaf!
@@ -509,7 +511,6 @@
         <button class="start-button" id="startButton">Start Practicing</button>
     </div>
 
-    <!-- Settings Page -->
     <div class="settings-page page hidden" id="settingsPage">
         <div class="settings-card">
             <h1>Settings</h1>
@@ -541,13 +542,13 @@
         </div>
     </div>
 
-    <!-- Chat Interface -->
     <div class="chat-container page hidden" id="chatContainer">
         <div class="chat-header">
             <h2 id="conversationInfo"></h2>
         </div>
         <div id="chatbox" class="chatbox"></div>
         <div class="input-container">
+            <!-- Shortened placeholder text for better spacing -->
             <input type="text" id="userInput" placeholder="Type in Swedish…">
             <button id="sendButton">Send</button>
         </div>
@@ -559,12 +560,9 @@
             <h3>Corrections <button id="toggleCorrections">Toggle Corrections</button></h3>
             <ul id="correctionsList"></ul>
         </div>
-        <p id="tokenUsage">Tokens used this session: 0</p> <!-- Token usage display -->
     </div>
 
-    <!-- JavaScript -->
     <script>
-        // Element References
         const startButton = document.getElementById('startButton');
         const startChatButton = document.getElementById('startChat');
         const landingPage = document.getElementById('landingPage');
@@ -579,18 +577,12 @@
         const correctionsContainer = document.getElementById('correctionsContainer');
         const correctionsList = document.getElementById('correctionsList');
         const toggleCorrectionsButton = document.getElementById('toggleCorrections');
-        const tokenUsageText = document.getElementById('tokenUsage'); // Token usage display
 
-        // Configuration
-        const MAX_MESSAGES = 10; // Maximum number of messages to retain
         let messageLimit = 10;
         let selectedProficiency = '';
         let selectedTopic = '';
         let correctionsVisible = false;
-        let messages = []; // Conversation history
-        let tokenUsage = 0; // Track tokens used
 
-        // Page Switching Function
         function switchPage(fromPage, toPage) {
             fromPage.classList.remove('visible');
             fromPage.classList.add('hidden');
@@ -604,7 +596,6 @@
             });
         }
 
-        // Event Listeners
         startButton.addEventListener('click', () => {
             switchPage(landingPage, settingsPage);
         });
@@ -614,28 +605,15 @@
             selectedTopic = document.getElementById('topics').value;
             switchPage(settingsPage, chatContainer);
             conversationInfo.innerText = `Topic: ${capitalize(selectedTopic)} | Level: ${capitalize(selectedProficiency)}`;
-
-            // Initialize conversation history with system prompt
-            messages = [
-                {
-                    role: 'system',
-                    content: `You are a Swedish tutor called Gustaf. Adjust your responses based on the following:
-                    - Proficiency: ${capitalize(selectedProficiency)}
-                    - Topic: ${capitalize(selectedTopic)}
-                    - Be concise and avoid unnecessary repetition.`
-                }
-            ];
-
-            // Initiate conversation by sending the initial message
-            await sendToBackend();
+            
+            // Initiate conversation by sending a special 'init' command
+            await sendToBackend('init');
         });
 
-        // Capitalize Function
         function capitalize(str) {
             return str.charAt(0).toUpperCase() + str.slice(1);
         }
 
-        // Session Limit Decrement Function
         function decrementSessionLimit() {
             messageLimit--;
             sessionLimitText.innerText = `Messages remaining for this session: ${messageLimit}`;
@@ -648,35 +626,14 @@
             }
         }
 
-        // Add Message Function
-        function addMessage(content, role = 'user') {
-            const message = { role, content };
-            messages.push(message);
-
-            // Maintain only the last MAX_MESSAGES
-            if (messages.length > MAX_MESSAGES) {
-                messages.shift(); // Remove the oldest message
-            }
-
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `message ${role === 'user' ? 'user' : 'bot'}`;
-            messageDiv.innerHTML = content;
-            chatbox.appendChild(messageDiv);
+        function addMessage(content, isUser = false) {
+            const message = document.createElement('div');
+            message.className = `message ${isUser ? 'user' : 'bot'}`;
+            message.innerHTML = content;
+            chatbox.appendChild(message);
             chatbox.scrollTop = chatbox.scrollHeight;
-
-            // Track token usage (approximation)
-            const tokens = countTokens(content);
-            tokenUsage += tokens;
-            tokenUsageText.innerText = `Tokens used this session: ${tokenUsage}`;
         }
 
-        // Token Counting Function (Approximation)
-        function countTokens(text) {
-            // Simple token counting: split by spaces
-            return text.split(/\s+/).length;
-        }
-
-        // Display Corrections Function
         function displayCorrections(corrections) {
             correctionsVisible = true;
             correctionsContainer.classList.add('visible');
@@ -689,7 +646,6 @@
             });
         }
 
-        // Toggle Corrections Visibility
         toggleCorrectionsButton.addEventListener('click', () => {
             correctionsVisible = !correctionsVisible;
             if (correctionsVisible) {
@@ -699,9 +655,16 @@
             }
         });
 
-        // Send Conversation History to Backend
-        async function sendToBackend() {
-            if (messageLimit <= 0) return;
+        // Function to send user input to backend
+        async function sendToBackend(userInput) {
+            if (messageLimit <= 0 && userInput.toLowerCase() !== 'init') return;
+
+            // If initiating the conversation, do not decrement the session limit
+            if (userInput.toLowerCase() !== 'init') {
+                addMessage(userInput, true);
+                userInputField.value = '';
+                decrementSessionLimit();
+            }
 
             const typingIndicator = document.createElement('div');
             typingIndicator.className = 'message bot';
@@ -714,7 +677,7 @@
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        messages,
+                        userInput,
                         proficiency: selectedProficiency,
                         topic: selectedTopic,
                     }),
@@ -722,36 +685,23 @@
 
                 const data = await response.json();
                 typingIndicator.remove();
-
-                if (data.choices && data.choices.length > 0) {
-                    const aiMessage = data.choices[0].message.content;
-                    addMessage(aiMessage, 'bot');
-                } else {
-                    addMessage('No response from AI.', 'bot');
-                }
-
+                addMessage(data.choices[0]?.message.content || 'No response', false);
                 if (data.corrections && data.corrections.length > 0) {
                     displayCorrections(data.corrections);
                 }
             } catch (error) {
                 console.error('Error:', error);
                 typingIndicator.remove();
-                addMessage('Error: Unable to fetch response.', 'bot');
+                addMessage('Error: Unable to fetch response.', false);
             }
         }
 
-        // Send Message Function
         async function sendMessage() {
             const userInput = userInputField.value.trim();
             if (!userInput || messageLimit <= 0) return;
-
-            addMessage(userInput, 'user');
-            userInputField.value = '';
-            decrementSessionLimit();
-            await sendToBackend();
+            sendToBackend(userInput);
         }
 
-        // Event Listeners for Sending Messages
         sendButton.addEventListener('click', sendMessage);
         userInputField.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') sendMessage();
