@@ -52,7 +52,7 @@ exports.handler = async (event) => {
                     },
                     { role: 'user', content: userInput },
                 ],
-                model: 'grok-2-latest',
+                model: 'grok-2-1212',
                 stream: false,
                 temperature: 0.1, // Adjust if needed for variability in responses
             }),
